@@ -15,16 +15,11 @@
     <link rel="stylesheet" href="../css/main.css" />
   </head>
   <body data-page="browse">
-    <!-- This will be our Navigation Bar with hamburger toggle for mobile -->
     <nav class="top-nav">
       <div class="nav-container">
-        <button
-          class="nav-toggle"
-          aria-label="Toggle navigation"
-          onclick="document.body.classList.toggle('nav-open')"
-        >
+        <button type="button" id="nav-toggle-btn" class="nav-toggle" aria-label="Toggle navigation">
           <svg
-            xmln="http://www.w3.org/2000/svg"
+            xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -33,51 +28,25 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
           >
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
 
         <div class="nav-left">
           <a href="index.html" class="nav-brand">
-            <svg
-              class="nav-logo"
-              viewBox="0 0 2025 517"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-              aria-label="foundIT Logo"
-            >
-              <!-- This is going-->
-              <title>foundIT Logo</title>
-              <g
-                transform="matrix(7.593143,0,0,7.593143,-531.928628,-1057.801367)"
-                style="
-                  font-family: &quot;Space Grotesk&quot;, sans-serif;
-                  font-weight: 700;
-                  font-size: 72px;
-                "
-              >
-                <text x="68.2" y="190.5" fill="#ffffff">f</text>
-                <text x="98.4" y="190.5" fill="#ffd200">o</text>
-                <text x="142.5" y="190.5" fill="#ffffff">und</text>
-                <text x="277.1" y="190.5" fill="#ffd200">IT</text>
-              </g>
-              <path
-                fill="ffd200"
-                d="M481.665,312.616l132.59,132.59c7.171,7.171 7.171,18.815 0,25.986c0,0 -25.986,25.986 -25.986,25.986c-7.171,7.171 -18.815,7.171 -25.986,-0l-132.59,-132.59c-7.171,-7.171 -7.171,-18.815 -0,-25.986l25.986,-25.986c7.171,-7.171 18.815,-7.171 25.986,0Z"
-              />
-            </svg>
+            <img src="../assets/logo.svg" alt="foundIT Logo" class="nav-logo" width="200" height="51" />
           </a>
         </div>
 
-        <!-- here will be our user actions and stuff -->
         <div class="nav-actions">
           <div class="nav-links">
-            <a href="#browse" class="nav-link">Browse Items</a>
+            <a href="browse.html" class="nav-link">Browse Items</a>
           </div>
-          <div id="navAuthActions" class="nav-auth-slot" data-auth-slot></div>
+          <a href="signin.html" class="btn btn-primary">Sign In</a>
         </div>
       </div>
     </nav>
@@ -208,6 +177,6 @@
         </section>
       </section>
     </main>
-    <script src="js/main.js" defer></script>
+    <script src="../js/main.js"></script>
   </body>
 </html>
