@@ -22,9 +22,8 @@ Content-Type: application/json
 {
     "adminId":"69bef08496bfbd33bbce5709",
     "itemType":"Electronics",
-    "desc":"Size of the empire state building",
-    "loc":"Peacock",
-    "date":"March 27th 2025"
+    "desc":"Other",
+    "loc":"Peacock"
 }
 ###
 post http://localhost:8080/api/foundItems
