@@ -24,6 +24,9 @@ public class admin {
     @NotBlank(message = "Password is Required")
     private String password;
 
+    public admin()
+    {
+    }
 
     public admin(String username, String password, String firstName, String lastName)
     {
@@ -36,6 +39,11 @@ public class admin {
     public String getUsername()
     {
         return this.username;
+    }
+
+    public String getId()
+    {
+        return this.id;
     }
 
     public void setUsername(String un)
@@ -73,4 +81,3 @@ public class admin {
         this.lastName = ln;
     }
 }
-

@@ -68,6 +68,20 @@ public class adminService
         return Optional.ofNullable(admin);
     }
 
+    public Optional<admin> getAdminByUsername(String username)
+    {
+        var query = new Query(Criteria.where("username").is(username));
+        var admin = mongoTemplate.findOne(query, admin.class);
+
+        return Optional.ofNullable(admin);
+    }
+
+    public Optional<admin> authenticate(String username, String password)
+    {
+        return getAdminByUsername(username)
+                .filter(existingAdmin -> passwordMatches(password, existingAdmin.getPassword()));
+    }
+
     public admin updateAdmin(String id, admin admin)
     {
         if(usernameExists(admin))
@@ -107,6 +121,16 @@ public class adminService
             }
         }
         return false;
+    }
+
+    private boolean passwordMatches(String rawPassword, String storedPassword)
+    {
+        if (rawPassword == null || storedPassword == null)
+        {
+            return false;
+        }
+
+        return passwordEncoder.matches(rawPassword, storedPassword) || rawPassword.equals(storedPassword);
     }
 
 
