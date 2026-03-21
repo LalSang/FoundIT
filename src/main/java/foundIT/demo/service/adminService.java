@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 package foundIT.demo.service;
 
 
@@ -84,4 +81,3 @@ public class adminService
 
     
 }
->>>>>>> 14cb309d4038cfbe5ffb677c4014b4884d8047fd
