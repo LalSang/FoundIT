@@ -723,3 +723,63 @@ a {
     border: 1px solid var(--border-color);
     box-shadow: 0 18px 50px rgba(15,23, 42, 0.08);
 }
+
+.auth-page {
+    min-height: 100vh;
+    padding: calc(var(--nav-height) + 2.5rem) 1.5rem 4rem;
+    display: flex;
+    align-items: center;
+    background:
+        radial-gradient(circle at top center, rgba(255, 204, 0, 0.14), transparent 30%),
+        linear-gradient(180deg, #eef3f7 0%, #f8fafc 42%, #ffffff 100%);
+}
+
+.auth-shell {
+    width: 100%;
+    max-width: 460px;
+    margin: 0 auto;
+    display: block;
+}
+
+.auth-card-copy,
+.auth-footnote {
+    color: var(--text-secondary);
+    line-height: 1.65;
+}
+
+.auth-card {
+    display: grid;
+    align-content: start;
+    gap: 1.1rem;
+    padding: 2.1rem;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+}
+
+.auth-card-title {
+    font-size: 1.9rem;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+}
+
+.staff-signin-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.auth-field {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.auth-submit {
+    width: 100%;
+    min-height: 48px;
+}
+
+@media (max-width: 960px) {
+    .auth-shell {
+        max-width: 460px;
+    }
+}
