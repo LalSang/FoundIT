@@ -1,6 +1,7 @@
 package foundIT.demo.service;
 
 
+import foundIT.demo.controller.adminController;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,12 +11,17 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import foundIT.demo.model.admin;
 
 @Service
 public class adminService
 {
+    private final adminController adminController;
     private final MongoTemplate mongoTemplate;
+    private final PasswordEncoder passwordEncoder;
 
 
     /** createAdmin
@@ -24,9 +30,13 @@ public class adminService
      * @param admin - The admin to be created
      * @return The newly saved Admin
      */
-    public adminService(MongoTemplate mongoTemplate)
+
+    @Autowired
+    public adminService(MongoTemplate mongoTemplate, adminController adminController, PasswordEncoder passwordEncoder)
     {
         this.mongoTemplate = mongoTemplate;
+        this.adminController = adminController;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public admin createAdmin(admin ad)
