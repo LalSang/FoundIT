@@ -48,7 +48,7 @@ public class admin {
         this.password = password;
     }
 
-    public String getPW ()
+    public String getPassword ()
     {
         return this.password;
     }
@@ -58,17 +58,17 @@ public class admin {
         return this.firstName;
     }
 
-    public String lastName()
+    public String getLastName()
     {
         return this.lastName;
     }
 
-    public void setFN(String fn)
+    public void setFirstName(String fn)
     {
         this.firstName = fn;
     }
 
-    public void setLN(String ln)
+    public void setLastName(String ln)
     {
         this.lastName = ln;
     }
