@@ -12,6 +12,9 @@ public class foundItem {
     
     @Id private String id;
 
+    @NotBlank(message = "Item id is Required")
+    private String itemId;
+
     @NotBlank(message = "First Name is Required")
     private String firstName;
 
@@ -20,7 +23,7 @@ public class foundItem {
 
 
     @NotBlank(message = "User Type is Required")
-    private String userType;
+    private boolean isAppUser;
 
 
 
@@ -33,14 +36,24 @@ public class foundItem {
     private String email;
 
 
-    public foundItem(String firstName, String lastName, String userType, String appId, String phoneNum, String email)
+    public foundItem(String itemId, String firstName, String lastName, boolean isAppUser, String appId, String phoneNum, String email)
     {
+        this.itemId = itemId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userType = userType;
+        this.isAppUser = isAppUser;
         this.appId = appId;
         this.phoneNum = phoneNum;
         this.email = email;
+    }
+
+    public String getItemId()
+    {
+        return this.itemId;
+    }
+    public void setItemId(String itemId)
+    {
+        this.itemId = itemId;
     }
 
     public String getFirstName()
@@ -61,13 +74,13 @@ public class foundItem {
         this.lastName = lastName;
     }
 
-    public String getUserType()
+    public boolean getIsAppUser()
     {
-        return this.userType;
+        return this.isAppUser;
     }
-    public void setUserType(String userType)
+    public void setIsAppUser(boolean isAppUser)
     {
-        this.userType = userType;
+        this.isAppUser = isAppUser;
     }
 
     public String getAppId()
