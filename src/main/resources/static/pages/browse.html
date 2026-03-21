@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="../css/main.css" />
   </head>
   <body data-page="browse">
     <!-- This will be our Navigation Bar with hamburger toggle for mobile -->
@@ -173,9 +173,41 @@
                 <option value="desk">Return desk</option>
               </select>
             </label>
+
+            <div class="filter-actions">
+              <button type="button" class="btn btn-primary">
+                Apply Filters
+              </button>
+              <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+
+            <div class="filter-note">
+              Anyone can browse. Standard accounts can sign in and review
+              listings. Desk workers sign in separately and use the report page
+              to post new items.
+            </div>
           </form>
         </aside>
+
+        <section class="browse-results" aria-label="Lost and Found listings">
+          <div class="browse-results-header">
+            <div>
+              <p class="section-eyebrow">Public Listins</p>
+              <h2>Campus lost-and-found items</h2>
+              <p>
+                Live item listings load from the current lost-and-found
+                database. Only desk worker accounts can create new postings.
+              </p>
+            </div>
+            <div id="browseSessionNote" class="filter-note browse-toolbar">
+              Loading session state.
+            </div>
+          </div>
+
+          <div id="itemGrid" class="item-grid"></div>
+        </section>
       </section>
     </main>
+    <script src="js/main.js" defer></script>
   </body>
 </html>
