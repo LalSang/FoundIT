@@ -47,6 +47,10 @@ public class adminService
         {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Choose another Username");
         }
+
+        String encodedPassword = passwordEncoder.encode(ad.getPassword());
+        ad.setPassword(encodedPassword);
+
         return mongoTemplate.save(ad);
     }
 
