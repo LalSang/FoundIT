@@ -10,10 +10,10 @@ post http://localhost:8080/api/admins
 Content-Type: application/json
 
 {
-    "firstName":"John",
-    "lastName":"Pork",
-    "username":"jPork23",
-    "password":"12345"
+    "firstName":"Joese",
+    "lastName":"Poro",
+    "username":"jPork236",
+    "password":"1893"
 }
 ###
 post http://localhost:8080/api/items
