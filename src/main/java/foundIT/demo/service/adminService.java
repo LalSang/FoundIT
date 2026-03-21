@@ -9,10 +9,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import foundIT.demo.model.admin;
 
@@ -68,6 +67,7 @@ public class adminService
         return Optional.ofNullable(admin);
     }
 
+
     public admin updateAdmin(String id, admin admin)
     {
         if(usernameExists(admin))
@@ -109,6 +109,38 @@ public class adminService
         return false;
     }
 
+    public admin getAdminByUsername(String user)
+    {
+        List<admin> la = getAllAdmins();
+        for ( admin a : la)
+        {
+            if (a.getUsername().equals(user))
+            {
+                return a;
+            }
+        }
+
+
+        return null;
+    }
+
+    public boolean checkPassword(admin a)
+    {
+
+        admin passAdmin = getAdminByUsername(a.getUsername());
+
+        if(passAdmin == null)
+        {
+            return false;
+        }
+        
+        if (passwordEncoder.encode(a.getPassword()) == passAdmin.getPassword())
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 
 
