@@ -1,0 +1,41 @@
+
+get http://localhost:8080/api/items
+###
+get http://localhost:8080/api/admins
+###
+get http://localhost:8080/api/foundItems
+###
+
+post http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+    "firstName":"Joese",
+    "lastName":"Poro",
+    "username":"jPork236",
+    "password":"1893"
+}
+###
+post http://localhost:8080/api/items
+Content-Type: application/json
+
+{
+    "adminId":"69bef08496bfbd33bbce5709",
+    "itemType":"Electronics",
+    "desc":"Other",
+    "loc":"Peacock"
+}
+###
+post http://localhost:8080/api/foundItems
+Content-Type: application/json
+
+{
+    "itemId":"69bef415dd664cc99090f6dc",
+    "firstName":"Joeseph",
+    "lastName":"Doen't",
+    "isAppUser":false,
+    "phoneNum":"336-980-3271",
+    "email":"joedo@gmail.com"
+}
+###
+delete http://localhost:8080/api/admins/
