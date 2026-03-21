@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=, initial-scale=1.0" />
+    <title>foundIT Browse Items</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
+  <body data-page="browse">
+    <nav class="top-nav">
+      <div class="nav-container">
+        <button
+          type="button"
+          id="nav-toggle-btn"
+          class="nav-toggle"
+          aria-label="Toggle navigation"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        <div class="nav-left">
+          <a href="index.html" class="nav-brand">
+            <img
+              src="../assets/logo.svg"
+              alt="foundIT Logo"
+              class="nav-logo"
+              width="200"
+              height="51"
+            />
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="browse.html" class="nav-link">Browse Items</a>
+          </div>
+          <a href="signin.html" class="btn btn-primary">Sign In</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="browse-page">
+      <section class="browse-shell" id="browse">
+        <aside class="filter-panel" aria-labelledby="browse-filters-heading">
+          <div class="filter-panel-header">
+            <p class="section-eyebrow">Refine Results</p>
+            <h1 id="browse-filters-heading">Browse campus listings</h1>
+            <p>
+              Narrow public lost-and-found feed by keywords, categories and
+              locations.
+            </p>
+          </div>
+
+          <form class="filter-form" id="browseFilters">
+            <label class="filter-group">
+              <span class="filter-label">Keyword</span>
+              <input
+                class="filter-input"
+                type="search"
+                name="keyword"
+                placeholder="Backpack, keys, water bottle"
+              />
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Category</span>
+              <select class="filter-select" name="category">
+                <option value="">All Categories</option>
+                <option value="Bag">Bags and Backpacks</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Drinkware">Drinkware</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Accessories">Accessories</option>
+              </select>
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Found Near</span>
+              <select class="filter-select" name="foundNear">
+                <option value="">All Categories</option>
+                <option value="belk library">Belk Library</option>
+                <option value="plemmons student union">
+                  Plemmons Student Union
+                </option>
+                <option value="student recreation center">
+                  Student Recreation Center
+                </option>
+                <option value="peacock hall">Peacock Hall</option>
+                <option value="kidd brewer stadium">Kidd Brewer Stadium</option>
+                <option value="sanford mall">Sanford Mall</option>
+              </select>
+            </label>
+
+            <label for="filter-group">
+              <span class="filter-label">Return To</span>
+              <select class="filter-select" name="returnTo">
+                <option value="">Any Front Desk</option>
+                <option value="belk library front desk">
+                  Belk Library Front Desk
+                </option>
+                <option value="plemmons student union information desk">
+                  Pleemons Student Union Information Desk
+                </option>
+                <option value="student recreation center front desk">
+                  Student Recreation Center Front Desk
+                </option>
+                <option value="peacock hall main office front desk">
+                  Peacock Hall Main Office Front Desk
+                </option>
+                <option value="kidd brewer stadium guest services desk">
+                  Kidd Brewer Stadium Guest Services Desk
+                </option>
+              </select>
+            </label>
+
+            <div class="filter-group">
+              <span class="filter-label">Avaliability</span>
+              <div class="filter-chip-row">
+                <span class="filter-chip">Ready to claim</span>
+                <span class="filter-chip">Recently added</span>
+              </div>
+            </div>
+
+            <label class="filter-group">
+              <span class="filter-label">Sort by</span>
+              <select class="filter-select" name="sort">
+                <option value="newest">Most recent</option>
+                <option value="oldest">Oldest first</option>
+                <option value="match">Closest match</option>
+                <option value="desk">Return desk</option>
+              </select>
+            </label>
+
+            <div class="filter-actions">
+              <button type="button" class="btn btn-primary">
+                Apply Filters
+              </button>
+              <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+
+            <div class="filter-note">
+              Anyone can browse. Standard accounts can sign in and review
+              listings. Desk workers sign in separately and use the report page
+              to post new items.
+            </div>
+          </form>
+        </aside>
+
+        <section class="browse-results" aria-label="Lost and Found listings">
+          <div class="browse-results-header">
+            <div>
+              <p class="section-eyebrow">Public Listins</p>
+              <h2>Campus lost-and-found items</h2>
+              <p>
+                Live item listings load from the current lost-and-found
+                database. Only desk worker accounts can create new postings.
+              </p>
+            </div>
+            <div id="browseSessionNote" class="filter-note browse-toolbar">
+              Loading session state.
+            </div>
+          </div>
+
+          <div id="itemGrid" class="item-grid"></div>
+        </section>
+      </section>
+    </main>
+    <script src="../js/main.js"></script>
+  </body>
+</html>
