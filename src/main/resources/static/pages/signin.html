@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Staff sign-in portal for desk workers and administrators."
+    />
+    <title>foundIT Staff Sign In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
+
+  <body>
+    <nav class="top-nav">
+      <div class="nav-container">
+        <button
+          type="button"
+          id="nav-toggle-btn"
+          class="nav-toggle"
+          aria-label="Toggle navigation"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        <div class="nav-left">
+          <a href="index.html" class="nav-brand">
+            <img
+              src="../assets/logo.svg"
+              alt="foundIT Logo"
+              class="nav-logo"
+              width="200"
+              height="51"
+            />
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="browse.html" class="nav-link">Browse Items</a>
+          </div>
+          <a href="signin.html" class="btn btn-primary">Sign In</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="auth-page">
+      <section class="auth-shell">
+        <section class="auth-card" aria-labelledby="staff-signin-heading">
+          <p class="section-eyebrow">Staff Access</p>
+          <h2 id="staff-signin-heading" class="auth-card-title">
+            Staff Sign In
+          </h2>
+          <p class="auth-card-copy">
+            Desk worker and administrator access only.
+          </p>
+
+          <form id="staff-signin-form" class="staff-signin-form">
+            <label class="auth-field">
+              <span class="filter-label">Username</span>
+              <input
+                id="signin-username"
+                class="filter-input"
+                type="text"
+                name="username"
+                autocomplete="username"
+                placeholder="Enter your staff username"
+                required
+              />
+            </label>
+
+            <label class="auth-field">
+              <span class="filter-label">Password</span>
+              <input
+                id="signin-password"
+                class="filter-input"
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+              />
+            </label>
+
+            <button type="submit" class="btn btn-primary auth-submit">
+              Sign In
+            </button>
+          </form>
+
+          <div id="signin-status" class="status-banner" hidden></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+  </body>
+</html>
