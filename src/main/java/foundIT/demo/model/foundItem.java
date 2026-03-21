@@ -22,7 +22,8 @@ public class foundItem {
     private String lastName;
 
 
-    @NotBlank(message = "User Type is Required")
+    //@NotBlank(message = "User Type is Required")
+    //@NotEmpty(message = "isAppUser must not be empty")
     private boolean isAppUser;
 
 
