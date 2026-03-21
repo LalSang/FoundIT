@@ -1,5 +1,7 @@
 package foundIT.demo.model;
 
+import java.time.Instant;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -36,6 +38,8 @@ public class foundItem {
     
     private String email;
 
+    private Instant date;
+
 
     public foundItem(String itemId, String firstName, String lastName, boolean isAppUser, String appId, String phoneNum, String email)
     {
@@ -46,6 +50,7 @@ public class foundItem {
         this.appId = appId;
         this.phoneNum = phoneNum;
         this.email = email;
+        this.date = Instant.now();
     }
 
     public String getItemId()
