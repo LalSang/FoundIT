@@ -43,7 +43,7 @@ public class adminController {
     @PostMapping("/signin")
     public ResponseEntity<String> signInAdmin(@Valid @RequestBody admin a)
     {
-        if(aService.checkPassword(a))
+        if(aService.passwordMatches(a))
         {
             return ResponseEntity.status(HttpStatus.OK).body("Sign in successful");
         }

@@ -75,11 +75,11 @@ public class adminService
         return Optional.ofNullable(admin);
     }
 
-    public Optional<admin> authenticate(String username, String password)
-    {
-        return getAdminByUsername(username)
-                .filter(existingAdmin -> passwordMatches(password, existingAdmin.getPassword()));
-    }
+    // public Optional<admin> authenticate(String username, String password)
+    // {
+    //     return getAdminByUsername(username)
+    //             .filter(existingAdmin -> passwordMatches(password, existingAdmin.getPassword()));
+    // }
 
     public admin updateAdmin(String id, admin admin)
     {
@@ -121,13 +121,32 @@ public class adminService
         }
         return false;
     }
-
-    private boolean passwordMatches(String rawPassword, String storedPassword)
+    public String findPassword(String user)
     {
-        if (rawPassword == null || storedPassword == null)
+
+        List<admin> la = getAllAdmins();
+        String pass = "";
+        for ( admin a : la)
+        {
+            if (a.getUsername().equals(user))
+            {
+                pass = a.getPassword();
+            }
+        }
+
+        return pass;
+
+    }
+
+    public boolean passwordMatches(admin a)
+    {
+        String rawPassword = a.getPassword();
+        
+        if (rawPassword == null || !usernameExists(a))
         {
             return false;
         }
+        String storedPassword = findPassword(a.getUsername());
 
         return passwordEncoder.matches(rawPassword, storedPassword) || rawPassword.equals(storedPassword);
     }
