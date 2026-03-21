@@ -39,6 +39,18 @@ public class adminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
 
+    // Create - Post /api/admins
+    @PostMapping("/signin")
+    public ResponseEntity<String> signInAdmin(@Valid @RequestBody admin a)
+    {
+        if(aService.checkPassword(a))
+        {
+            return ResponseEntity.status(HttpStatus.OK).body("Sign in successful");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Sign in unSuccessful");
+        //return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
+    }
+
     // Read - Get /api/admins
     @GetMapping
     public ResponseEntity<List<admin>> getAllAdmins()
