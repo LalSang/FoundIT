@@ -1,133 +1,205 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Campus Lost & Found Portal for Appalachian State University."
+    />
+    <title>foundIT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
 
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Campus Lost & Found Portal for Appalachian State University." />
-	<title>foundIT</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-		rel="stylesheet" />
-	<link rel="stylesheet" href="../css/main.css" />
-</head>
+  <body>
+    <nav class="top-nav">
+      <div class="nav-container">
+        <button
+          type="button"
+          id="nav-toggle-btn"
+          class="nav-toggle"
+          aria-label="Toggle navigation"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
 
-<body>
-	<nav class="top-nav">
-		<div class="nav-container">
-			<button type="button" id="nav-toggle-btn" class="nav-toggle" aria-label="Toggle navigation">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-					aria-hidden="true">
-					<line x1="3" y1="6" x2="21" y2="6" />
-					<line x1="3" y1="12" x2="21" y2="12" />
-					<line x1="3" y1="18" x2="21" y2="18" />
-				</svg>
-			</button>
+        <div class="nav-left">
+          <a href="index.html" class="nav-brand">
+            <img
+              src="../assets/logo.svg"
+              alt="foundIT Logo"
+              class="nav-logo"
+              width="200"
+              height="51"
+            />
+          </a>
+        </div>
 
-			<div class="nav-left">
-				<a href="index.html" class="nav-brand">
-					<img src="../assets/logo.svg" alt="foundIT Logo" class="nav-logo" width="200" height="51" />
-				</a>
-			</div>
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="browse.html" class="nav-link">Browse Items</a>
+          </div>
+          <a href="signin.html" class="btn btn-primary">Sign In</a>
+        </div>
+      </div>
+    </nav>
 
-			<div class="nav-actions">
-				<div class="nav-links">
-					<a href="browse.html" class="nav-link">Browse Items</a>
-				</div>
-				<a href="signin.html" class="btn btn-primary">Sign In</a>
-			</div>
-		</div>
-	</nav>
+    <main class="hero-section">
+      <div class="hero-content">
+        <p class="location-tag">Appalachian State University</p>
 
-	<main class="hero-section">
-		<div class="hero-content">
-			<p class="location-tag">Appalachian State University</p>
+        <div class="hero-text">
+          <h1 class="hero-title">Campus Lost &amp; Found Portal</h1>
+          <p class="hero-subtitle">
+            Items turned in across campus can be posted here. Browse the
+            listing, find what's yours, and submit a claim.
+          </p>
+        </div>
+      </div>
+    </main>
 
-			<div class="hero-text">
-				<h1 class="hero-title">Campus Lost &amp; Found Portal</h1>
-				<p class="hero-subtitle">
-					Items turned in across campus can be posted here.
-					Browse the listing, find what's yours, and submit a claim.
-				</p>
-			</div>
-		</div>
-	</main>
+    <section class="info-section">
+      <div class="info-container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-icon">1</div>
+            <h3 class="step-title">Lose Something?</h3>
+            <p class="step-desc">
+              Check the portal to see if someone has turned it in. Use filters
+              to narrow down the search.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">2</div>
+            <h3 class="step-title">Find Something?</h3>
+            <p class="step-desc">
+              Report the item with a description and photo. Drop it off at a
+              designated campus location.
+            </p>
+          </div>
 
-	<section class="info-section">
-		<div class="info-container">
-			<h2 class="section-title">How It Works</h2>
-			<div class="steps-grid">
-				<div class="step-card">
-					<div class="step-icon">1</div>
-					<h3 class="step-title">Lose Something?</h3>
-					<p class="step-desc">
-						Check the portal to see if someone has turned it in.
-						Use filters to narrow down the search.
-					</p>
-				</div>
-				<div class="step-card">
-					<div class="step-icon">2</div>
-					<h3 class="step-title">Find Something?</h3>
-					<p class="step-desc">
-						Report the item with a description and photo.
-						Drop it off at a designated campus location.
-					</p>
-				</div>
+          <div class="step-card">
+            <div class="step-icon">3</div>
+            <h3 class="step-title">Claim It</h3>
+            <p class="step-desc">
+              Verify ownership, then pick up your lost item from the designated
+              return center.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-				<div class="step-card">
-					<div class="step-icon">3</div>
-					<h3 class="step-title">Claim It</h3>
-					<p class="step-desc">
-						Verify ownership, then pick up your lost item from the designated return center.
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
+    <footer class="main-footer">
+      <div class="footer-content">
+        <p>&copy; 2026 Appalachian State University. All rights reserved.</p>
+        <p>foundIT Portal &mdash; Designed for the University Community</p>
 
-	<footer class="main-footer">
-		<div class="footer-content">
-			<p>&copy; 2026 Appalachian State University. All rights reserved.</p>
-			<p>foundIT Portal &mdash; Designed for the University Community</p>
+        <div class="footer-socials">
+          <a
+            href="https://www.instagram.com/appstate/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-icon"
+            aria-label="App State Instagram"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <circle
+                cx="17.5"
+                cy="6.5"
+                r="0.5"
+                fill="currentColor"
+                stroke="none"
+              />
+            </svg>
+          </a>
 
-			<div class="footer-socials">
-				<a href="https://www.instagram.com/appstate/" target="_blank" rel="noopener noreferrer"
-					class="social-icon" aria-label="App State Instagram">
+          <a
+            href="https://www.facebook.com/appalachianstateuniversity/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-icon"
+            aria-label="App State Facebook"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              />
+            </svg>
+          </a>
 
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-						stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						aria-hidden="true">
-						<rect x="2" y="2" width="20" height="20" rx="5" />
-						<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-						<circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-					</svg>
-				</a>
-
-				<a href="https://www.facebook.com/appalachianstateuniversity/" target="_blank" rel="noopener noreferrer"
-					class="social-icon" aria-label="App State Facebook">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-						stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						aria-hidden="true">
-						<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-					</svg>
-				</a>
-
-				<a href="https://twitter.com/appstate" target="_blank" rel="noopener noreferrer" class="social-icon"
-					aria-label="App State X (Twitter)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-						stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-						aria-hidden="true">
-						<path d="M4 4l11.733 16h4.267l-11.733-16z" />
-						<path d="M4 20l6.768-6.768m2.46-2.46l6.772-6.772" />
-					</svg>
-				</a>
-			</div>
-		</div>
-	</footer>
-	<script src="../js/main.js"></script>
-</body>
-
+          <a
+            href="https://twitter.com/appstate"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-icon"
+            aria-label="App State X (Twitter)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 4l11.733 16h4.267l-11.733-16z" />
+              <path d="M4 20l6.768-6.768m2.46-2.46l6.772-6.772" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+    <script src="../js/main.js"></script>
+  </body>
 </html>
