@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import foundIT.demo.model.admin;
@@ -21,7 +20,6 @@ import foundIT.demo.model.admin;
 @Service
 public class adminService
 {
-    private final adminController adminController;
     private final MongoTemplate mongoTemplate;
     private final PasswordEncoder passwordEncoder;
 
@@ -33,11 +31,9 @@ public class adminService
      * @return The newly saved Admin
      */
 
-    @Autowired
-    public adminService(MongoTemplate mongoTemplate, adminController adminController, PasswordEncoder passwordEncoder)
+    public adminService(MongoTemplate mongoTemplate,  PasswordEncoder passwordEncoder)
     {
         this.mongoTemplate = mongoTemplate;
-        this.adminController = adminController;
         this.passwordEncoder = passwordEncoder;
     }
 
