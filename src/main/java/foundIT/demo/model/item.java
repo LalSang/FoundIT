@@ -1,5 +1,6 @@
 package foundIT.demo.model;
 
+import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,17 +26,17 @@ public class item {
     @NotBlank(message = "Location is Required")
     private String loc;
 
-    @NotBlank(message = "Date is Required")
-    private String date;
+    //@NotBlank(message = "Date is Required")
+    private Instant date;
 
 
-    public item (String adminId, String itemType, String desc, String loc, String date)
+    public item (String adminId, String itemType, String desc, String loc)
     {
         this.adminId = adminId;
         this.itemType = itemType;
         this.desc = desc;
         this.loc = loc;
-        this.date = date;
+        this.date = Instant.now();    
     }
 
     public String getAdminId()
@@ -74,11 +75,11 @@ public class item {
         this.loc = loc;
     }
 
-    public String getDate()
+    public Instant getDate()
     {
         return this.date;
     }
-    public void setDate(String date)
+    public void setDate(Instant date)
     {
         this.date = date;
     }
