@@ -39,7 +39,143 @@
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
+
+        <div class="nav-left">
+          <a href="index.html" class="nav-brand">
+            <svg
+              class="nav-logo"
+              viewBox="0 0 2025 517"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="foundIT Logo"
+            >
+              <!-- This is going-->
+              <title>foundIT Logo</title>
+              <g
+                transform="matrix(7.593143,0,0,7.593143,-531.928628,-1057.801367)"
+                style="
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
+                  font-weight: 700;
+                  font-size: 72px;
+                "
+              >
+                <text x="68.2" y="190.5" fill="#ffffff">f</text>
+                <text x="98.4" y="190.5" fill="#ffd200">o</text>
+                <text x="142.5" y="190.5" fill="#ffffff">und</text>
+                <text x="277.1" y="190.5" fill="#ffd200">IT</text>
+              </g>
+              <path
+                fill="ffd200"
+                d="M481.665,312.616l132.59,132.59c7.171,7.171 7.171,18.815 0,25.986c0,0 -25.986,25.986 -25.986,25.986c-7.171,7.171 -18.815,7.171 -25.986,-0l-132.59,-132.59c-7.171,-7.171 -7.171,-18.815 -0,-25.986l25.986,-25.986c7.171,-7.171 18.815,-7.171 25.986,0Z"
+              />
+            </svg>
+          </a>
+        </div>
+
+        <!-- here will be our user actions and stuff -->
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="#browse" class="nav-link">Browse Items</a>
+          </div>
+          <div id="navAuthActions" class="nav-auth-slot" data-auth-slot></div>
+        </div>
       </div>
     </nav>
+
+    <main class="browse-page">
+      <section class="browse-shell" id="browse">
+        <aside class="filter-panel" aria-labelledby="browse-filters-heading">
+          <div class="filter-panel-header">
+            <p class="section-eyebrow">Refine Results</p>
+            <h1 id="browse-filters-heading">Browse campus listings</h1>
+            <p>
+              Narrow public lost-and-found feed by keywords, categories and
+              locations.
+            </p>
+          </div>
+
+          <form class="filter-form" id="browseFilters">
+            <label class="filter-group">
+              <span class="filter-label">Keyword</span>
+              <input
+                class="filter-input"
+                type="search"
+                name="keyword"
+                placeholder="Backpack, keys, water bottle"
+              />
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Category</span>
+              <select class="filter-select" name="category">
+                <option value="">All Categories</option>
+                <option value="Bag">Bags and Backpacks</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Drinkware">Drinkware</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Accessories">Accessories</option>
+              </select>
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Found Near</span>
+              <select class="filter-select" name="foundNear">
+                <option value="">All Categories</option>
+                <option value="belk library">Belk Library</option>
+                <option value="plemmons student union">
+                  Plemmons Student Union
+                </option>
+                <option value="student recreation center">
+                  Student Recreation Center
+                </option>
+                <option value="peacock hall">Peacock Hall</option>
+                <option value="kidd brewer stadium">Kidd Brewer Stadium</option>
+                <option value="sanford mall">Sanford Mall</option>
+              </select>
+            </label>
+
+            <label for="filter-group">
+              <span class="filter-label">Return To</span>
+              <select class="filter-select" name="returnTo">
+                <option value="">Any Front Desk</option>
+                <option value="belk library front desk">
+                  Belk Library Front Desk
+                </option>
+                <option value="plemmons student union information desk">
+                  Pleemons Student Union Information Desk
+                </option>
+                <option value="student recreation center front desk">
+                  Student Recreation Center Front Desk
+                </option>
+                <option value="peacock hall main office front desk">
+                  Peacock Hall Main Office Front Desk
+                </option>
+                <option value="kidd brewer stadium guest services desk">
+                  Kidd Brewer Stadium Guest Services Desk
+                </option>
+              </select>
+            </label>
+
+            <div class="filter-group">
+              <span class="filter-label">Avaliability</span>
+              <div class="filter-chip-row">
+                <span class="filter-chip">Ready to claim</span>
+                <span class="filter-chip">Recently added</span>
+              </div>
+            </div>
+
+            <label class="filter-group">
+              <span class="filter-label">Sort by</span>
+              <select class="filter-select" name="sort">
+                <option value="newest">Most recent</option>
+                <option value="oldest">Oldest first</option>
+                <option value="match">Closest match</option>
+                <option value="desk">Return desk</option>
+              </select>
+            </label>
+          </form>
+        </aside>
+      </section>
+    </main>
   </body>
 </html>
