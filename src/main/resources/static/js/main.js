@@ -13,9 +13,6 @@ const claimantTypeSelect = document.getElementById("claimant-type");
 const claimStudentFields = document.getElementById("claim-student-fields");
 const claimStudentIdInput = document.getElementById("claim-student-id");
 const claimGuestFields = document.getElementById("claim-guest-fields");
-const claimGuestVerificationInput = document.getElementById(
-  "claim-guest-verification",
-);
 const claimPhoneInput = document.getElementById("claim-phone");
 const claimEmailInput = document.getElementById("claim-email");
 const navAuthLink = document.getElementById("nav-auth-link");
@@ -273,19 +270,12 @@ function updateClaimFormState() {
     claimStudentIdInput.required = isStudent;
   }
 
-  if (claimGuestVerificationInput) {
-    claimGuestVerificationInput.required = !isStudent;
-    if (isStudent) {
-      claimGuestVerificationInput.checked = false;
-    }
-  }
-
   if (claimPhoneInput) {
-    claimPhoneInput.required = !isStudent;
+    claimPhoneInput.required = true;
   }
 
   if (claimEmailInput) {
-    claimEmailInput.required = !isStudent;
+    claimEmailInput.required = true;
   }
 }
 
@@ -670,7 +660,7 @@ function renderClaimedItems(
             <span class="item-tag">${category}</span>
           </div>
 
-          <div class="claim-summary">
+          <div class="claim-summary claim-summary-inline">
             <p><strong>Claimed By:</strong> ${claimantName}</p>
             <p>${claimType} claimant. Claim saved ${escapeHtml(claimDate)}.</p>
           </div>
@@ -959,20 +949,10 @@ claimForm?.addEventListener("submit", async (event) => {
   const studentId = String(formData.get("studentId") ?? "").trim();
   const phoneNum = String(formData.get("phoneNum") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
-  const guestVerification = formData.get("guestVerification");
   const isStudent = claimantType !== "guest";
 
   if (!itemId) {
     updateStatusBanner(claimStatus, "Choose a listing before starting a claim.", "is-error");
-    return;
-  }
-
-  if (!isStudent && !guestVerification) {
-    updateStatusBanner(
-      claimStatus,
-      "Verify the guest's real ID before saving the claim.",
-      "is-error",
-    );
     return;
   }
 
