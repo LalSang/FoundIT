@@ -22,19 +22,27 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/admins")
-//@CrossOrigin(origins = "*")
 public class adminController {
     
 
     private final adminService aService;
 
 
+    /**
+     * aSerrvice
+     * @param aService - adminService object to use adminService functions
+     */
     public adminController(adminService aService)
     {
         this.aService = aService;
     }
 
     // Create - Post /api/admins
+    /**
+     * @param a - admin object
+     * @return - 201 if created 
+     * creates a new admin
+     */
     @PostMapping
     public ResponseEntity<admin> createAdmin(@Valid @RequestBody admin a)
     {
@@ -43,6 +51,11 @@ public class adminController {
     }
 
     // Create - Post /api/admins/signin
+    /**
+     * @param a - admin object
+     * @return - 401 if password does not match 
+     * password checker
+     */
     @PostMapping("/signin")
     public ResponseEntity<Map<String, String>> signInAdmin(@Valid @RequestBody admin a)
     {
@@ -55,6 +68,10 @@ public class adminController {
     }
 
     // Read - Get /api/admins
+    /**
+     * @return 200 if get is successful
+     * gets all admins
+     */
     @GetMapping
     public ResponseEntity<List<admin>> getAllAdmins()
     {
@@ -65,6 +82,11 @@ public class adminController {
 
 
     // Read - Get /api/admins/{id}
+    /**
+     * @param id - admin identification
+     * @return - 200 if found 
+     * checks if admin exists
+     */
     @GetMapping("/{id}")
     public ResponseEntity<admin> updateAdmin(@PathVariable String id)
     {
@@ -73,6 +95,13 @@ public class adminController {
     }
     
     // Update - put /api/admins/{id}
+    /**
+     * 
+     * @param id - admin identification
+     * @param a - admin object
+     * @return - 404 if admin not found
+     * admin updates 
+     */
     @PutMapping("/{id}")
     public ResponseEntity<admin> updatedAdmin(@PathVariable String id,
                                                 @RequestBody admin a)
@@ -87,6 +116,12 @@ public class adminController {
     }
 
     // Delete - Delete /api/admins/{id}
+    /**
+     * 
+     * @param id - admin Id
+     * @return - 200 if admin deleted
+     * seraches then deletes admin
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAdmin(@PathVariable String id)
     {
