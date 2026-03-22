@@ -39,6 +39,7 @@ public class foundItem {
     
     private String email;
 
+    @Indexed(expired = "2m")
     private Instant date;
 
 
