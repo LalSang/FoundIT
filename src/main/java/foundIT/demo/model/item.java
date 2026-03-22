@@ -14,7 +14,7 @@ public class item {
     
     @Id private String id;
 
-    @NotBlank(message = "Admin Id is Required")
+    // @NotBlank(message = "Admin Id is Required")
     private String adminId;
 
     @NotBlank(message = "Item Type is Required")
@@ -29,6 +29,9 @@ public class item {
     //@NotBlank(message = "Date is Required")
     private Instant date;
 
+    public item()
+    {
+    }
 
     public item (String adminId, String itemType, String desc, String loc)
     {
@@ -37,6 +40,15 @@ public class item {
         this.desc = desc;
         this.loc = loc;
         this.date = Instant.now();    
+    }
+
+    public String getId()
+    {
+        return this.id;
+    }
+    public void setId(String id)
+    {
+        this.id = id;
     }
 
     public String getAdminId()

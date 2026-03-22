@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/css/main.css" />
   </head>
 
-  <body>
+  <body data-page="admin">
     <nav class="top-nav">
       <div class="nav-container">
         <button
@@ -60,7 +60,13 @@
           <div class="nav-links">
             <a href="/browse.html" class="nav-link">Browse Items</a>
           </div>
-          <a href="/signin.html" class="btn btn-primary">Sign Out</a>
+          <a
+            href="/signin.html"
+            id="staff-signout-link"
+            class="btn btn-primary"
+          >
+            Sign Out
+          </a>
         </div>
       </div>
     </nav>
@@ -78,14 +84,15 @@
 
         <section class="admin-simple-card">
           <h2 class="admin-simple-section-title">Post Found Item</h2>
-          <form class="admin-simple-form">
+          <form id="admin-create-form" class="admin-simple-form">
             <label class="filter-group">
               <span class="filter-label">Item Name</span>
               <input
                 class="filter-input"
                 type="text"
-                name="itemName"
+                name="itemType"
                 placeholder="Black backpack"
+                required
               />
             </label>
 
@@ -93,8 +100,9 @@
               <span class="filter-label">Description</span>
               <textarea
                 class="filter-input filter-textarea"
-                name="description"
+                name="desc"
                 placeholder="Short description of the item"
+                required
               ></textarea>
             </label>
 
@@ -103,47 +111,22 @@
               <input
                 class="filter-input"
                 type="text"
-                name="location"
+                name="loc"
                 placeholder="Belk Library"
+                required
               />
             </label>
 
-            <button type="button" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">
               Create Listing
             </button>
           </form>
+          <div id="admin-status" class="status-banner" hidden></div>
         </section>
 
         <section class="admin-simple-card">
           <h2 class="admin-simple-section-title">Current Listings</h2>
-
-          <article class="admin-simple-listing">
-            <div>
-              <h3>Gray AirPods Case</h3>
-              <p>Held at the Rec Center Front Desk.</p>
-            </div>
-            <div class="admin-simple-actions">
-              <button type="button" class="btn btn-secondary">Edit</button>
-              <button type="button" class="btn btn-primary">
-                Mark Returned
-              </button>
-              <button type="button" class="btn btn-secondary">Delete</button>
-            </div>
-          </article>
-
-          <article class="admin-simple-listing">
-            <div>
-              <h3>Student ID Holder</h3>
-              <p>Held at Peacock Hall Office.</p>
-            </div>
-            <div class="admin-simple-actions">
-              <button type="button" class="btn btn-secondary">Edit</button>
-              <button type="button" class="btn btn-primary">
-                Mark Returned
-              </button>
-              <button type="button" class="btn btn-secondary">Delete</button>
-            </div>
-          </article>
+          <div id="admin-listings" aria-live="polite"></div>
         </section>
 
         <section class="admin-simple-card">
