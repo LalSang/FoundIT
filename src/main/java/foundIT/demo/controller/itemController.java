@@ -49,6 +49,15 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemList);
     }
 
+    // Read - Get /api/items/unclaimed
+    @GetMapping("/unclaimed")
+    public ResponseEntity<List<item>> getUnclaimedItems()
+    {
+        List<item> itemList = iService.getUnclaimedItems();
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemList);
+    }
+
     // Read - Get /api/items/getType
     @GetMapping("/getType")
     public ResponseEntity<List<item>> getType(String type)

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Staff sign-in portal for desk workers and administrators."
+      content="Staff-only view of claimed campus lost-and-found items."
     />
-    <title>foundIT Staff Sign In</title>
+    <title>foundIT Claimed Items</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="css/main.css" />
   </head>
 
-  <body>
+  <body data-page="claimed">
     <nav class="top-nav">
       <div class="nav-container">
         <button
@@ -76,42 +76,22 @@
       </div>
     </nav>
 
-    <main class="auth-page">
-      <section class="auth-shell">
-        <section class="auth-card" aria-labelledby="staff-signin-heading">
-          <p class="section-eyebrow">Staff Access</p>
-          <h2 id="staff-signin-heading" class="auth-card-title">SIGN IN</h2>
+    <main class="browse-page">
+      <section class="claimed-shell">
+        <section class="browse-results" aria-label="Claimed items">
+          <div class="browse-results-header">
+            <div>
+              <p class="section-eyebrow">Staff Claims</p>
+              <h2>Claimed items</h2>
+              <p>
+                Listings move here after staff save claimer details. These
+                records are loaded from the claim database.
+              </p>
+            </div>
+          </div>
 
-          <form id="staff-signin-form" class="staff-signin-form">
-            <label class="auth-field">
-              <span class="filter-label">Username</span>
-              <input
-                class="filter-input"
-                type="text"
-                name="username"
-                autocomplete="username"
-                placeholder="Enter your staff username"
-                required
-              />
-            </label>
-
-            <label class="auth-field">
-              <span class="filter-label">Password</span>
-              <input
-                class="filter-input"
-                type="password"
-                name="password"
-                autocomplete="current-password"
-                placeholder="Enter your password"
-                required
-              />
-            </label>
-
-            <button type="submit" class="btn btn-primary auth-submit">
-              Sign In
-            </button>
-          </form>
-          <div id="signin-status" class="status-banner" hidden></div>
+          <div id="claimed-status" class="status-banner" hidden></div>
+          <div id="claimedGrid" class="item-grid" aria-live="polite"></div>
         </section>
       </section>
     </main>

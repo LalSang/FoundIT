@@ -29,6 +29,9 @@ public class item {
     @NotBlank(message = "Location is Required")
     private String loc;
 
+    @NotBlank(message = "Return desk is Required")
+    private String returnTo;
+
     //@NotBlank(message = "Date is Required")
     private Instant date;
 
@@ -36,13 +39,14 @@ public class item {
     {
     }
 
-    public item (String adminId, String itemType, String desc, String category, String loc)
+    public item (String adminId, String itemType, String desc, String category, String loc, String returnTo)
     {
         this.adminId = adminId;
         this.itemType = itemType;
         this.desc = desc;
         this.category = category;
         this.loc = loc;
+        this.returnTo = returnTo;
         this.date = Instant.now();    
     }
 
@@ -98,6 +102,15 @@ public class item {
     public void setLoc(String loc)
     {
         this.loc = loc;
+    }
+
+    public String getReturnTo()
+    {
+        return this.returnTo;
+    }
+    public void setReturnTo(String returnTo)
+    {
+        this.returnTo = returnTo;
     }
 
     public Instant getDate()

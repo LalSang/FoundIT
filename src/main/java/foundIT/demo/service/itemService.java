@@ -1,7 +1,11 @@
 package foundIT.demo.service;
 
 
+<<<<<<< HEAD
 import java.time.Instant;
+=======
+import java.util.ArrayList;
+>>>>>>> 0e93583 (claimed)
 import java.util.List;
 import java.util.Optional;
 
@@ -60,9 +64,32 @@ public class itemService
         return  mongoTemplate.find(query, item.class);
     }
 
-    public List<item> getNotFound()
+    public List<item> getUnclaimedItems()
     {
         List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
+        List<String> itemIds = new ArrayList<>();
+
+        for (foundItem found : foundItems)
+        {
+            if (found.getItemId() != null && !found.getItemId().isBlank())
+            {
+                itemIds.add(found.getItemId());
+            }
+        }
+
+        if (itemIds.isEmpty())
+        {
+            return getAllItems();
+        }
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").nin(itemIds));
+        return mongoTemplate.find(query, item.class);
+    }
+
+    // public List<item> getNotFound()
+    // {
+    //     List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
 
         List<String> foundIds = foundItems.stream()
             .map(foundItem::getItemId)
@@ -111,6 +138,7 @@ public class itemService
                             .set("desc", i.getDesc())
                             .set("category", i.getCategory())
                             .set("loc", i.getLoc())
+                            .set("returnTo", i.getReturnTo())
                             .set("date", i.getDate());
         
         mongoTemplate.updateFirst(query, updatedItem, item.class);

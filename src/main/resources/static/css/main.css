@@ -440,6 +440,11 @@ a {
 	align-items: start;
 }
 
+.claimed-shell {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
 .filter-panel,
 .browse-results {
 	background-color: var(--bg-surface);

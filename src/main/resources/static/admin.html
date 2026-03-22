@@ -62,6 +62,9 @@
             <a href="admin.html" id="nav-staff-link" class="nav-link" hidden>
               Create Listing
             </a>
+            <a href="claimed.html" id="nav-claimed-link" class="nav-link" hidden>
+              Claimed
+            </a>
             <a href="index.html" id="nav-signout-link" class="nav-link" hidden>
               Sign Out
             </a>
@@ -80,7 +83,8 @@
           <h1 class="admin-simple-title">Worker and Admin Page</h1>
           <p class="admin-simple-copy">
             Desk workers can post found items here. Start claimant intake from the
-            browse page after you verify a listing with the person claiming it.
+            browse page after you verify a listing with the person claiming it,
+            then review saved claims on the Claimed page.
           </p>
         </header>
 
@@ -124,14 +128,42 @@
             </label>
 
             <label class="filter-group">
-              <span class="filter-label">Found Location</span>
-              <input
-                class="filter-input"
-                type="text"
-                name="loc"
-                placeholder="Belk Library"
-                required
-              />
+              <span class="filter-label">Found Near</span>
+              <select class="filter-select" name="loc" required>
+                <option value="">Select a location</option>
+                <option value="Belk Library">Belk Library</option>
+                <option value="Plemmons Student Union">
+                  Plemmons Student Union
+                </option>
+                <option value="Student Recreation Center">
+                  Student Recreation Center
+                </option>
+                <option value="Peacock Hall">Peacock Hall</option>
+                <option value="Kidd Brewer Stadium">Kidd Brewer Stadium</option>
+                <option value="Sanford Mall">Sanford Mall</option>
+              </select>
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Returned To</span>
+              <select class="filter-select" name="returnTo" required>
+                <option value="">Select a front desk</option>
+                <option value="Belk Library Front Desk">
+                  Belk Library Front Desk
+                </option>
+                <option value="Plemmons Student Union Information Desk">
+                  Plemmons Student Union Information Desk
+                </option>
+                <option value="Student Recreation Center Front Desk">
+                  Student Recreation Center Front Desk
+                </option>
+                <option value="Peacock Hall Main Office Front Desk">
+                  Peacock Hall Main Office Front Desk
+                </option>
+                <option value="Kidd Brewer Stadium Guest Services Desk">
+                  Kidd Brewer Stadium Guest Services Desk
+                </option>
+              </select>
             </label>
 
             <button type="submit" class="btn btn-primary">

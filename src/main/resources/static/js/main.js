@@ -20,15 +20,17 @@ const claimPhoneInput = document.getElementById("claim-phone");
 const claimEmailInput = document.getElementById("claim-email");
 const navAuthLink = document.getElementById("nav-auth-link");
 const navStaffLink = document.getElementById("nav-staff-link");
+const navClaimedLink = document.getElementById("nav-claimed-link");
 const signOutLink = document.getElementById("nav-signout-link");
 const browseFiltersForm = document.getElementById("browseFilters");
 const itemGrid = document.getElementById("itemGrid");
 const browseStatus = document.getElementById("browse-status");
 const browseResultsMeta = document.getElementById("browse-results-meta");
+const claimedGrid = document.getElementById("claimedGrid");
+const claimedStatus = document.getElementById("claimed-status");
 
 let browseItemsState = [];
 let activeStaffUser = null;
-let claimRecordsByItemId = new Map();
 
 function resolveAppUrl(path) {
   return new URL(path, window.location.href).toString();
@@ -73,14 +75,6 @@ function getStoredStaffUser() {
   }
 }
 
-function createClaimsByItemIdMap(claims) {
-  return new Map(
-    claims
-      .filter((claim) => claim && claim.itemId)
-      .map((claim) => [String(claim.itemId), claim]),
-  );
-}
-
 function clearStoredStaffUser() {
   sessionStorage.removeItem("foundItStaffUser");
 }
@@ -89,6 +83,11 @@ function setPublicNavigation() {
   if (navStaffLink) {
     navStaffLink.hidden = true;
     navStaffLink.href = resolveAppUrl("admin.html");
+  }
+
+  if (navClaimedLink) {
+    navClaimedLink.hidden = true;
+    navClaimedLink.href = resolveAppUrl("claimed.html");
   }
 
   if (signOutLink) {
@@ -112,6 +111,11 @@ function setStaffNavigation(staffUser) {
   if (navStaffLink) {
     navStaffLink.hidden = false;
     navStaffLink.href = resolveAppUrl("admin.html");
+  }
+
+  if (navClaimedLink) {
+    navClaimedLink.hidden = false;
+    navClaimedLink.href = resolveAppUrl("claimed.html");
   }
 
   if (signOutLink) {
@@ -337,6 +341,14 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function createItemsByIdMap(items) {
+  return new Map(
+    items
+      .filter((item) => item && item.id)
+      .map((item) => [String(item.id), item]),
+  );
+}
+
 function normalizeText(value) {
   return String(value ?? "").trim().toLowerCase();
 }
@@ -438,6 +450,16 @@ function inferReturnDesk(location) {
   return "Campus Front Desk";
 }
 
+function getBrowseReturnDesk(item) {
+  const savedReturnDesk = String(item?.returnTo ?? "").trim();
+
+  if (savedReturnDesk) {
+    return savedReturnDesk;
+  }
+
+  return inferReturnDesk(item?.loc);
+}
+
 function isRecentlyAdded(value) {
   const parsedDate = Date.parse(value || "");
 
@@ -455,7 +477,7 @@ function getBrowseSearchText(item) {
       item.desc,
       item.loc,
       inferBrowseCategory(item),
-      inferReturnDesk(item.loc),
+      getBrowseReturnDesk(item),
     ].join(" "),
   );
 }
@@ -496,7 +518,7 @@ function updateBrowseResultsMeta(visibleCount, totalCount) {
   }
 
   if (!totalCount) {
-    browseResultsMeta.textContent = "No live listings yet";
+    browseResultsMeta.textContent = "No listings yet";
     return;
   }
 
@@ -504,7 +526,7 @@ function updateBrowseResultsMeta(visibleCount, totalCount) {
 
   browseResultsMeta.textContent =
     visibleCount === totalCount
-      ? `${totalCount} live ${noun}`
+      ? `${totalCount} ${noun}`
       : `Showing ${visibleCount} of ${totalCount} ${noun}`;
 }
 
@@ -530,25 +552,16 @@ function renderBrowseItems(
       const title = escapeHtml(item.itemType || "Untitled item");
       const description = escapeHtml(item.desc || "No description provided.");
       const location = escapeHtml(item.loc || "Location not provided");
-      const returnDesk = escapeHtml(inferReturnDesk(item.loc));
+      const returnDesk = escapeHtml(getBrowseReturnDesk(item));
       const category = escapeHtml(inferBrowseCategory(item));
       const dateLabel = formatListingDate(item.date);
-      const claimRecord = claimRecordsByItemId.get(String(item.id));
-      const claimSummary =
-        activeStaffUser?.id && claimRecord ? formatClaimSummary(claimRecord) : "";
       const claimButton =
         activeStaffUser?.id && item.id
-          ? claimRecord
-            ? '<button type="button" class="btn btn-secondary" disabled>Claim Started</button>'
-            : `<button type="button" class="btn btn-secondary" data-start-claim-id="${escapeHtml(item.id)}">
-                Start Claim
-              </button>`
+          ? `<button type="button" class="btn btn-secondary" data-start-claim-id="${escapeHtml(item.id)}">
+              Start Claim
+            </button>`
           : "";
-      const tags = [
-        category,
-        isRecentlyAdded(item.date) ? "Recently added" : null,
-        "Ready to claim",
-      ].filter(Boolean);
+      const tags = [category].filter(Boolean);
 
       return `
         <article class="item-card">
@@ -577,8 +590,108 @@ function renderBrowseItems(
               <span class="meta-value">${dateLabel}</span>
             </div>
           </div>
-          ${claimSummary}
           ${claimButton ? `<div class="item-actions">${claimButton}</div>` : ""}
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderClaimedItems(
+  claims,
+  itemsById,
+  emptyMessage = "No claimed items have been saved yet.",
+) {
+  if (!claimedGrid) {
+    return;
+  }
+
+  if (!claims.length) {
+    claimedGrid.innerHTML = `
+      <div class="empty-state">
+        ${escapeHtml(emptyMessage)}
+      </div>
+    `;
+    return;
+  }
+
+  claimedGrid.innerHTML = claims
+    .map((claimRecord) => {
+      const item = itemsById.get(String(claimRecord?.itemId ?? ""));
+      const title = escapeHtml(item?.itemType || "Claimed item");
+      const description = escapeHtml(
+        item?.desc || "The original listing details are no longer available.",
+      );
+      const category = item ? escapeHtml(inferBrowseCategory(item)) : "Claim record";
+      const foundNear = escapeHtml(item?.loc || "No location on file");
+      const returnDesk = escapeHtml(
+        item ? getBrowseReturnDesk(item) : "No return desk on file",
+      );
+      const listingDate = formatListingDate(item?.date);
+      const claimDate = formatListingDate(claimRecord?.date);
+      const claimantName = escapeHtml(
+        [claimRecord?.firstName, claimRecord?.lastName].filter(Boolean).join(" ").trim() ||
+          "Unknown claimer",
+      );
+      const claimType = escapeHtml(formatClaimType(claimRecord));
+      const studentIdRow = claimRecord?.isAppUser
+        ? `
+            <div class="item-meta-row">
+              <span class="meta-label">Student ID</span>
+              <span class="meta-value">${escapeHtml(claimRecord.appId || "Not provided")}</span>
+            </div>
+          `
+        : "";
+      const phoneRow = !claimRecord?.isAppUser
+        ? `
+            <div class="item-meta-row">
+              <span class="meta-label">Phone</span>
+              <span class="meta-value">${escapeHtml(claimRecord.phoneNum || "Not provided")}</span>
+            </div>
+          `
+        : "";
+      const emailRow = !claimRecord?.isAppUser
+        ? `
+            <div class="item-meta-row">
+              <span class="meta-label">Email</span>
+              <span class="meta-value">${escapeHtml(claimRecord.email || "Not provided")}</span>
+            </div>
+          `
+        : "";
+
+      return `
+        <article class="item-card">
+          <div class="item-description">
+            <h3 class="item-title">${title}</h3>
+            <p>${description}</p>
+          </div>
+
+          <div class="item-tags">
+            <span class="item-tag">${category}</span>
+          </div>
+
+          <div class="claim-summary">
+            <p><strong>Claimed By:</strong> ${claimantName}</p>
+            <p>${claimType} claimant. Claim saved ${escapeHtml(claimDate)}.</p>
+          </div>
+
+          <div class="item-meta">
+            <div class="item-meta-row">
+              <span class="meta-label">Found Near</span>
+              <span class="meta-value">${foundNear}</span>
+            </div>
+            <div class="item-meta-row">
+              <span class="meta-label">Return To</span>
+              <span class="meta-value">${returnDesk}</span>
+            </div>
+            <div class="item-meta-row">
+              <span class="meta-label">Listing Added</span>
+              <span class="meta-value">${escapeHtml(listingDate)}</span>
+            </div>
+            ${studentIdRow}
+            ${phoneRow}
+            ${emailRow}
+          </div>
         </article>
       `;
     })
@@ -596,7 +709,7 @@ function applyBrowseFilters() {
     const searchText = getBrowseSearchText(item);
     const category = normalizeText(inferBrowseCategory(item));
     const location = normalizeText(item.loc);
-    const returnDesk = normalizeText(inferReturnDesk(item.loc));
+    const returnDesk = normalizeText(getBrowseReturnDesk(item));
 
     if (keywordTerms.length && !keywordTerms.every((term) => searchText.includes(term))) {
       return false;
@@ -643,8 +756,8 @@ function applyBrowseFilters() {
   const emptyMessage = browseItemsState.length
     ? hasActiveFilters
       ? "No listings match those filters right now. Try clearing one or more filters."
-      : "No live listings are available right now."
-    : "No live listings have been posted yet.";
+      : "No listings are available right now."
+    : "No listings have been posted yet.";
 
   renderBrowseItems(sortedItems, emptyMessage);
   updateBrowseResultsMeta(sortedItems.length, browseItemsState.length);
@@ -655,29 +768,53 @@ async function loadBrowseListings() {
     return;
   }
 
-  updateStatusBanner(browseStatus, "Loading live listings...", "");
+  updateStatusBanner(browseStatus, "Loading listings...", "");
 
   try {
-    const [items, claims] = await Promise.all([
-      requestJson(resolveAppUrl("api/items")),
-      activeStaffUser?.id
-        ? requestJson(resolveAppUrl("api/foundItems")).catch(() => [])
-        : Promise.resolve([]),
-    ]);
+    const items = await requestJson(resolveAppUrl("api/items/unclaimed"));
     browseItemsState = Array.isArray(items) ? items : [];
-    claimRecordsByItemId = createClaimsByItemIdMap(Array.isArray(claims) ? claims : []);
     hideStatusBanner(browseStatus);
     applyBrowseFilters();
   } catch (error) {
     browseItemsState = [];
-    claimRecordsByItemId = new Map();
     updateStatusBanner(
       browseStatus,
-      error.message || "Unable to load live listings right now.",
+      error.message || "Unable to load listings right now.",
       "is-error",
     );
-    renderBrowseItems([], "Live listings are temporarily unavailable.");
+    renderBrowseItems([], "Listings are temporarily unavailable.");
     updateBrowseResultsMeta(0, 0);
+  }
+}
+
+async function loadClaimedListings() {
+  if (!claimedGrid) {
+    return;
+  }
+
+  updateStatusBanner(claimedStatus, "Loading claimed items...", "");
+
+  try {
+    const [items, claims] = await Promise.all([
+      requestJson(resolveAppUrl("api/items")),
+      requestJson(resolveAppUrl("api/foundItems")),
+    ]);
+    const itemsById = createItemsByIdMap(Array.isArray(items) ? items : []);
+    const claimedRecords = (Array.isArray(claims) ? claims : []).sort((left, right) => {
+      const leftTime = Date.parse(left?.date || "") || 0;
+      const rightTime = Date.parse(right?.date || "") || 0;
+      return rightTime - leftTime;
+    });
+
+    hideStatusBanner(claimedStatus);
+    renderClaimedItems(claimedRecords, itemsById);
+  } catch (error) {
+    updateStatusBanner(
+      claimedStatus,
+      error.message || "Unable to load claimed items right now.",
+      "is-error",
+    );
+    renderClaimedItems([], new Map(), "Claimed items are temporarily unavailable.");
   }
 }
 
@@ -742,6 +879,7 @@ adminCreateForm?.addEventListener("submit", async (event) => {
   const desc = String(formData.get("desc") ?? "").trim();
   const category = String(formData.get("category") ?? "").trim();
   const loc = String(formData.get("loc") ?? "").trim();
+  const returnTo = String(formData.get("returnTo") ?? "").trim();
 
   updateStatusBanner(adminStatus, "Creating listing...", "is-success");
 
@@ -757,6 +895,7 @@ adminCreateForm?.addEventListener("submit", async (event) => {
         desc,
         category,
         loc,
+        returnTo,
       }),
     });
 
@@ -857,7 +996,11 @@ claimForm?.addEventListener("submit", async (event) => {
     });
 
     closeClaimModal();
-    updateStatusBanner(browseStatus, "Claim started successfully.", "is-success");
+    updateStatusBanner(
+      browseStatus,
+      "Claim saved. The listing moved to the Claimed page.",
+      "is-success",
+    );
     await loadBrowseListings();
   } catch (error) {
     updateStatusBanner(
@@ -879,7 +1022,7 @@ async function initializePage() {
   activeStaffUser = verifiedStaffUser;
   updateClaimFormState();
 
-  if (adminCreateForm) {
+  if (adminCreateForm || claimedGrid) {
     if (!verifiedStaffUser?.id) {
       window.location.href = resolveAppUrl("signin.html");
       return;
@@ -888,6 +1031,10 @@ async function initializePage() {
   
   if (itemGrid) {
     await loadBrowseListings();
+  }
+
+  if (claimedGrid) {
+    await loadClaimedListings();
   }
 }
 
