@@ -42,18 +42,13 @@ public class foundItemService
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A claim has already been started for this item");
         }
 
+        validateContactInfo(i);
+
         if(i.getIsAppUser())
         {
             if(i.getAppId() == null || i.getAppId().isBlank())
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID is required for student claims");
-            }
-        }
-        else
-        {
-            if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())
-            {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone number must be filled for guest claims");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID, phone number, and email are required for student claims");
             }
         }
 
@@ -84,18 +79,13 @@ public class foundItemService
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item record not found");
         }
 
+        validateContactInfo(i);
+
         if(i.getIsAppUser())
         {
             if(i.getAppId() == null || i.getAppId().isBlank())
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID is required for student claims");
-            }
-        }
-        else
-        {
-            if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())
-            {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone number must be filled for guest claims");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID, phone number, and email are required for student claims");
             }
         }
 
@@ -139,5 +129,18 @@ public class foundItemService
             }
         }
         return false;
+    }
+
+    private void validateContactInfo(foundItem i)
+    {
+        if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())
+        {
+            if(i.getIsAppUser())
+            {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID, phone number, and email are required for student claims");
+            }
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number and email are required for guest claims");
+        }
     }
 }

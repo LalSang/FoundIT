@@ -132,6 +132,24 @@ a {
 	gap: 2.5rem;
 }
 
+.top-nav #nav-auth-link {
+	height: auto;
+	width: auto;
+	padding: 0;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: #ffffff;
+	font-size: 1.05rem;
+	line-height: 1;
+}
+
+.top-nav #nav-auth-link:hover {
+	background: transparent;
+	color: var(--accent-color);
+	border: none;
+}
+
 .btn {
 	display: inline-flex;
 	align-items: center;
@@ -818,6 +836,15 @@ a {
 
 .claim-summary strong {
 	    font-weight: 700;
+}
+
+.claim-summary-inline {
+	    padding: 0;
+	    border: 0;
+	    background: transparent;
+	    display: grid;
+	    gap: 0.2rem;
+	    text-align: left;
 }
 
 .claim-modal {

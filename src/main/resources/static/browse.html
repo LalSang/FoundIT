@@ -77,11 +77,8 @@
       <section class="browse-shell" id="browse">
         <aside class="filter-panel" aria-labelledby="browse-filters-heading">
           <div class="filter-panel-header">
-            <p class="section-eyebrow">Refine Results</p>
+            <p class="section-eyebrow">Filter</p>
             <h1 id="browse-filters-heading">Browse campus listings</h1>
-            <p>
-              Narrow public lost-and-found feed by category and location.
-            </p>
           </div>
 
           <form class="filter-form" id="browseFilters">
@@ -153,10 +150,6 @@
             <div>
               <p class="section-eyebrow">Public Listings</p>
               <h2>Campus lost-and-found items</h2>
-              <p>
-                Campus listings load from the lost-and-found database. Only desk
-                worker accounts can create new postings.
-              </p>
             </div>
           </div>
 
@@ -176,7 +169,6 @@
       >
         <div class="claim-modal-header">
           <div class="claim-modal-copy">
-            <p class="section-eyebrow">Start Claim</p>
             <h2 id="claim-modal-title" class="admin-simple-section-title">
               Start a claim
             </h2>
@@ -233,6 +225,11 @@
             </select>
           </label>
 
+          <p id="claim-guest-fields" class="claim-helper" hidden>
+            If the claimer is not a student, make sure to check a real ID before
+            releasing the item.
+          </p>
+
           <div id="claim-student-fields" class="claim-conditional-group">
             <label class="filter-group">
               <span class="filter-label">Student ID</span>
@@ -244,28 +241,6 @@
                 placeholder="Banner ID or student ID"
                 required
               />
-            </label>
-            <p class="claim-helper">
-              Confirm the student ID matches the claimer before releasing the item.
-            </p>
-          </div>
-
-          <div
-            id="claim-guest-fields"
-            class="claim-conditional-group claim-guest-panel"
-            hidden
-          >
-            <p class="claim-guest-note">
-              For non-students, ask to see a real ID and make sure it matches the
-              person's physical appearance before handing over the item.
-            </p>
-            <label class="claim-checkbox">
-              <input
-                id="claim-guest-verification"
-                type="checkbox"
-                name="guestVerification"
-              />
-              <span>I checked a real ID that matched the person.</span>
             </label>
           </div>
 
@@ -292,11 +267,6 @@
               />
             </label>
           </div>
-
-          <p class="claim-helper">
-            Phone number and email are required for non-students. Students can add
-            them too if you want claim follow-up details on file.
-          </p>
 
           <div id="claim-status" class="status-banner" hidden></div>
 
