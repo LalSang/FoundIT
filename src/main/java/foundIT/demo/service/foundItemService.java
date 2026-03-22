@@ -24,6 +24,13 @@ public class foundItemService
 
 
 
+
+    /**foundItemService
+     *  Class Constructor
+     * 
+     * @param mongoTemplate - The template for the mongo database
+     * @param iService - ItemService object so this class is able to run itemService functions
+     */
     public foundItemService(MongoTemplate mongoTemplate, itemService iService)
     {
         this.mongoTemplate = mongoTemplate;
@@ -31,6 +38,13 @@ public class foundItemService
     }
 
 
+
+    /**createFoundItem
+     *  Creates an item and adds it to the database
+     * 
+     * @param i - The Founditem to be added
+     * @return - The item if successfully added nothing if not
+     */
     public foundItem createFoundItem(foundItem i)
     {
         if((iService.getItemById(i.getItemId())).isEmpty())
@@ -61,11 +75,21 @@ public class foundItemService
         return mongoTemplate.save(i);
     }
 
+    /**getAllFoundItems
+     *  Return a list of all items in the database
+     * 
+     * @return - A list of Finditems
+     */
     public List<foundItem> getAllFoundItems()
     {
         return mongoTemplate.findAll(foundItem.class);
     }
 
+    /**getFoundItemById
+     * 
+     * @param id - foundItem identifier 
+     * @return - specific foundItem
+     */
     public Optional<foundItem> getFoundItemById(String id)
     {
         var foundItem = mongoTemplate.findById(id, foundItem.class);
@@ -73,6 +97,12 @@ public class foundItemService
         return Optional.ofNullable(foundItem);
     }
 
+    /**
+     * 
+     * @param id - foundItem identifier 
+     * @param i - foundItem object
+     * @return - specific foundItem with updates
+     */ 
     public foundItem updateFoundItem(String id, foundItem i)
     {
         if((iService.getItemById(i.getItemId())).isEmpty())
@@ -106,6 +136,11 @@ public class foundItemService
         return getFoundItemById(id).orElse(null);
     }
 
+    /**deleteFoundItem
+     * 
+     * @param id - foundItem identification 
+     * @return - True if foundItem is found and deleted
+     */
     public boolean deleteFoundItem(String id)
     {
         var found = mongoTemplate.findById(id, foundItem.class);
@@ -118,6 +153,11 @@ public class foundItemService
         return mongoTemplate.remove(query, foundItem.class).getDeletedCount() > 0;
     }
 
+    /**
+     * itemFouns
+     * @param ii - foundItem object
+     * @return - true if item is found
+     */
     public boolean itemFound(foundItem ii)
     {
         List<foundItem> li = getAllFoundItems();
@@ -132,6 +172,10 @@ public class foundItemService
     }
 
 
+    /**
+     * cleanupExpiredFoundItems
+     * chekcs every 60 sec if a foundItem hit the cutoffTime
+     */
     @Scheduled(fixedRate = 60000) // runs every 60 seconds
     public void cleanupExpiredFoundItems()
     {
@@ -153,6 +197,12 @@ public class foundItemService
         }
     }
 
+    /**
+     * validateContatInfo
+     * @param i - foundItemObject
+     * 
+     * checks for empty required info
+     */
     private void validateContactInfo(foundItem i)
     {
         if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())
