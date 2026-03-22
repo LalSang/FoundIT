@@ -12,10 +12,10 @@ public class admin {
     
     @Id private String id;
 
-    @NotBlank(message = "First Name is Required")
+   // @NotBlank(message = "First Name is Required")
     private String firstName;
 
-    @NotBlank(message = "Last Name is Required")
+    //@NotBlank(message = "Last Name is Required")
     private String lastName;
 
     @NotBlank(message = "Username is Required")
