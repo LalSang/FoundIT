@@ -28,29 +28,13 @@ public class adminController {
     private final adminService aService;
 
 
-<<<<<<< HEAD
-    /**
-     * aSerrvice
-     * @param aService - adminService object to use adminService functions
-     */
-=======
     /** Stores the admin service used by this controller. */
->>>>>>> 191c937 (comments for main.js)
     public adminController(adminService aService)
     {
         this.aService = aService;
     }
 
-<<<<<<< HEAD
-    // Create - Post /api/admins
-    /**
-     * @param a - admin object
-     * @return - 201 if created 
-     * creates a new admin
-     */
-=======
     /** Creates a new admin account. */
->>>>>>> 191c937 (comments for main.js)
     @PostMapping
     public ResponseEntity<admin> createAdmin(@Valid @RequestBody admin a)
     {
@@ -58,16 +42,7 @@ public class adminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
 
-<<<<<<< HEAD
-    // Create - Post /api/admins/signin
-    /**
-     * @param a - admin object
-     * @return - 401 if password does not match 
-     * password checker
-     */
-=======
     /** Validates a basic admin sign-in payload. */
->>>>>>> 191c937 (comments for main.js)
     @PostMapping("/signin")
     public ResponseEntity<Map<String, String>> signInAdmin(@Valid @RequestBody admin a)
     {

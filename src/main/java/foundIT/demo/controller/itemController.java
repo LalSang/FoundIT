@@ -27,28 +27,13 @@ public class itemController {
     private final itemService iService;
 
 
-<<<<<<< HEAD
-    /**
-     * @param iService - itemService for functions
-     */
-=======
     /** Stores the item service used by this REST controller. */
->>>>>>> 191c937 (comments for main.js)
     public itemController(itemService iService)
     {
         this.iService = iService;
     }
 
-<<<<<<< HEAD
-    // Create - Post /api/items
-    /**
-     * creates a itemObject
-     * @param i - item object 
-     * @return - 201 if successful
-     */
-=======
     /** Creates a new item listing from the request body. */
->>>>>>> 191c937 (comments for main.js)
     @PostMapping
     public ResponseEntity<item> createItem(@Valid @RequestBody item i)
     {
@@ -56,15 +41,7 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
     }
 
-<<<<<<< HEAD
-    // Read - Get /api/items
-    /**
-     * returns all items
-     * @return - 200 if successful
-     */
-=======
     /** Returns every saved item listing. */
->>>>>>> 191c937 (comments for main.js)
     @GetMapping
     public ResponseEntity<List<item>> getAllItems()
     {
