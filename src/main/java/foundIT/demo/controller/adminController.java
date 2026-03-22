@@ -1,6 +1,8 @@
 package foundIT.demo.controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,13 +43,13 @@ public class adminController {
 
     // Create - Post /api/admins/signin
     @PostMapping("/signin")
-    public ResponseEntity<String> signInAdmin(@Valid @RequestBody admin a)
+    public ResponseEntity<Map<String, String>> signInAdmin(@Valid @RequestBody admin a)
     {
         if(aService.passwordMatches(a))
         {
-            return ResponseEntity.status(HttpStatus.OK).body("Sign in successful");
+            return ResponseEntity.ok(Collections.singletonMap("message", "Sign in successful"));
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Sign in unSuccessful");
+        return ResponseEntity.ok(Collections.singletonMap("message", "Sign in Unsuccessful"));
         //return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
 
