@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import foundIT.demo.model.foundItem;
 import foundIT.demo.model.item;
 
 @Service
@@ -53,18 +52,18 @@ public class itemService
         return  mongoTemplate.find(query, item.class);
     }
 
-    public List<item> getNotFound()
-    {
-        List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
+    // public List<item> getNotFound()
+    // {
+    //     List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
 
-        List<String> ids = foundItems.stream()
-            .map(foundItem::getItemId)
-            .toList();
+    //     List<String> ids = foundItems.stream()
+    //         .map(foundItem::getItemId)
+    //         .toList();
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").nin(ids));
-        return  mongoTemplate.find(query, item.class);
-    }
+    //     Query query = new Query();
+    //     query.addCriteria(Criteria.where("_id").nin(ids));
+    //     return  mongoTemplate.find(query, item.class);
+    // }
 
     
 
