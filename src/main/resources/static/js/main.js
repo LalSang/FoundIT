@@ -29,7 +29,7 @@ staffSignInForm?.addEventListener("submit", async (event) => {
   updateSignInStatus("Checking your credentials...", "is-success");
 
   try {
-    const response = await fetch("/api/auth/signin", {
+    const response = await fetch("/api/admins/signin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ staffSignInForm?.addEventListener("submit", async (event) => {
     }
 
     sessionStorage.setItem("foundItStaffUser", JSON.stringify(payload));
-    window.location.href = "admin.html";
+    window.location.href = "/admin.html";
   } catch (error) {
     updateSignInStatus(
       error.message || "Unable to sign in right now.",
