@@ -124,17 +124,16 @@ public class adminService
     public String findPassword(String user)
     {
 
-        List<admin> la = getAllAdmins();
-        String pass = "";
-        for ( admin a : la)
+        
+        for ( admin a : getAllAdmins())
         {
             if (a.getUsername().equals(user))
             {
-                pass = a.getPassword();
+                return a.getPassword();
             }
         }
 
-        return pass;
+        return null;
 
     }
 
