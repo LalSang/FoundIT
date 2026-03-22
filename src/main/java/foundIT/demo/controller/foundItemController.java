@@ -25,7 +25,9 @@ public class foundItemController {
 
     private final foundItemService fIService;
 
-
+    /**
+     * @param fiS - fonundItemService for functions
+     */
     public foundItemController(foundItemService fiS)
     {
         this.fIService = fiS;
@@ -33,6 +35,11 @@ public class foundItemController {
 
     @PostMapping
     // Create - Post /api/foundItems
+    /**
+     * creates foundItem
+     * @param fI - foundItem object
+     * @return - 201 if foundItem successfully created
+     */
     public ResponseEntity<foundItem> createFoundItem(@Valid @RequestBody foundItem fI)
     {
         var savedFI = fIService.createFoundItem(fI);
@@ -40,6 +47,10 @@ public class foundItemController {
     }
 
     // Read - Get /api/foundItems
+    /**
+     * returns foundItems
+     * @return - 200 if successful
+     */
     @GetMapping
     public ResponseEntity<List<foundItem>> getAllFoundItems()
     {
@@ -49,6 +60,11 @@ public class foundItemController {
     }
 
     // Read - Get /api/foundItems/{id}
+    /**
+     * finds foundItems
+     * @param id - foundItem Identification
+     * @return - 200 if successful
+     */
     @GetMapping("/{id}")
     public ResponseEntity<foundItem> updateFoundItem(@PathVariable String id)
     {
@@ -57,6 +73,12 @@ public class foundItemController {
     }
     
     // Update - put /api/foundItems/{id}
+    /**
+     * updates foundItem
+     * @param id - fonundItem Id
+     * @param a - foundItem object
+     * @return - 200 if good
+     */
     @PutMapping("/{id}")
     public ResponseEntity<foundItem> updatedFI(@PathVariable String id,
                                                 @RequestBody foundItem a)
@@ -71,6 +93,11 @@ public class foundItemController {
     }
 
     // Delete - Delete /api/foundItems/{id}
+    /**
+     * deletes a foundItem
+     * @param id - foundItem id
+     * @return - 200 if successful
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delteFoundItem(@PathVariable String id)
     {
