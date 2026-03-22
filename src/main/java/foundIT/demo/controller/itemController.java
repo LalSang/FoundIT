@@ -58,14 +58,23 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemList);
     }
 
-    // // Read - Get /api/items/getNotFound
-    // @GetMapping("/getType")
-    // public ResponseEntity<List<item>> getNotFound()
-    // {
-    //     List<item> itemList = iService.getNotFound();
+    // Read - Get /api/items/getNotClaimed
+    @GetMapping("/getNotClaimed")
+    public ResponseEntity<List<item>> getNotFound()
+    {
+        List<item> itemList = iService.getNotFound();
 
-    //     return ResponseEntity.status(HttpStatus.OK).body(itemList);
-    // }
+        return ResponseEntity.status(HttpStatus.OK).body(itemList);
+    }
+
+    // Read - Get /api/items/getClaimed
+    @GetMapping("/getClaimed")
+    public ResponseEntity<List<item>> getClaimed()
+    {
+        List<item> itemList = iService.getClaimed();
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemList);
+    }
 
 
     // Read - Get /api/items/{id}

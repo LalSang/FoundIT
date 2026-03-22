@@ -1,9 +1,9 @@
 package foundIT.demo.service;
 
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.time.Instant;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import foundIT.demo.model.foundItem;
 import foundIT.demo.model.item;
 
 @Service
@@ -59,18 +60,30 @@ public class itemService
         return  mongoTemplate.find(query, item.class);
     }
 
-    // public List<item> getNotFound()
-    // {
-    //     List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
+    public List<item> getNotFound()
+    {
+        List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
 
-    //     List<String> ids = foundItems.stream()
-    //         .map(foundItem::getItemId)
-    //         .toList();
+        List<String> foundIds = foundItems.stream()
+            .map(foundItem::getItemId)
+            .toList();
 
-    //     Query query = new Query();
-    //     query.addCriteria(Criteria.where("_id").nin(ids));
-    //     return  mongoTemplate.find(query, item.class);
-    // }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").nin(foundIds));
+        return  mongoTemplate.find(query, item.class);
+    }
+    public List<item> getClaimed()
+    {
+        List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
+
+        List<String> foundIds = foundItems.stream()
+            .map(foundItem::getItemId)
+            .toList();
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").in(foundIds));
+        return  mongoTemplate.find(query, item.class);
+    }
 
     
 

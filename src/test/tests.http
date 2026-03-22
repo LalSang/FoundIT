@@ -5,6 +5,10 @@ get http://localhost:8080/api/admins
 ###
 get http://localhost:8080/api/foundItems
 ###
+get http://localhost:8080/api/items/getClaimed
+###
+get http://localhost:8080/api/items/getNotClaimed
+###
 
 post http://localhost:8080/api/admins/signin
 Content-Type: application/json
@@ -28,11 +32,11 @@ post http://localhost:8080/api/foundItems
 Content-Type: application/json
 
 {
-    "itemId":"69bf3d5a0bb523bbeaaf053b",
-    "firstName":"App",
-    "lastName":"Student",
+    "itemId":"69bf5ea5bed5d166f1808ea6",
+    "firstName":"Good",
+    "lastName":"Guy",
     "isAppUser":true,
-    "appId":"09382048"
+    "appId":"9879860"
 }
 ###
 post http://localhost:8080/api/foundItems
