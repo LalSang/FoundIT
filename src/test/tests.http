@@ -6,7 +6,7 @@ get http://localhost:8080/api/admins
 get http://localhost:8080/api/foundItems
 ###
 
-post http://localhost:8080/api/admins
+post http://localhost:8080/api/admins/signin
 Content-Type: application/json
 
 {
