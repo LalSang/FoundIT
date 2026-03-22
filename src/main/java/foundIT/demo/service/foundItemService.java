@@ -105,7 +105,6 @@ public class foundItemService
         return getFoundItemById(id).orElse(null);
     }
 
-    @Scheduled (fixedRate = 60000)
     public boolean deleteFoundItem(String id)
     {
         var found = mongoTemplate.findById(id, foundItem.class);
@@ -129,6 +128,23 @@ public class foundItemService
             }
         }
         return false;
+    }
+
+
+    @Scheduled(fixedRate = 60000) // runs every 60 seconds
+    public void cleanupExpiredFoundItems()
+    {
+        Instant todaysDate = Instant.now();
+
+        Query query = new Query(Criteria.where("date").lt(todaysDate));
+
+        List<foundItem> expiredItems = mongoTemplate.find(query, foundItem.class);
+
+        for (foundItem foundItem : expiredItems) 
+        {
+            iService.deleteItem(foundItem.getItemId());
+            mongoTemplate.remove(foundItem);
+        }
     }
 
     private void validateContactInfo(foundItem i)
