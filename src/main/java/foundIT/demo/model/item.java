@@ -23,6 +23,9 @@ public class item {
     @NotBlank(message = "Description is Required")
     private String desc;
 
+    @NotBlank(message = "Category is Required")
+    private String category;
+
     @NotBlank(message = "Location is Required")
     private String loc;
 
@@ -33,11 +36,12 @@ public class item {
     {
     }
 
-    public item (String adminId, String itemType, String desc, String loc)
+    public item (String adminId, String itemType, String desc, String category, String loc)
     {
         this.adminId = adminId;
         this.itemType = itemType;
         this.desc = desc;
+        this.category = category;
         this.loc = loc;
         this.date = Instant.now();    
     }
@@ -76,6 +80,15 @@ public class item {
     public void setDesc(String desc)
     {
         this.desc = desc;
+    }
+
+    public String getCategory()
+    {
+        return this.category;
+    }
+    public void setCategory(String category)
+    {
+        this.category = category;
     }
 
     public String getLoc()

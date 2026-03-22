@@ -3,7 +3,6 @@ package foundIT.demo.model;
 import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -40,10 +39,13 @@ public class foundItem {
     
     private String email;
 
-    @Indexed(expireAfter = "2m")
     private Instant date;
 
 
+
+    public foundItem()
+    {
+    }
 
     public foundItem(String itemId, String firstName, String lastName, boolean isAppUser, String appId, String phoneNum, String email)
     {
@@ -55,6 +57,15 @@ public class foundItem {
         this.phoneNum = phoneNum;
         this.email = email;
         this.date = Instant.now();
+    }
+
+    public String getId()
+    {
+        return this.id;
+    }
+    public void setId(String id)
+    {
+        this.id = id;
     }
 
     public String getItemId()
@@ -118,6 +129,15 @@ public class foundItem {
     public void setEmail(String email)
     {
         this.email = email;
+    }
+
+    public Instant getDate()
+    {
+        return this.date;
+    }
+    public void setDate(Instant date)
+    {
+        this.date = date;
     }
 
 }

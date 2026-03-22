@@ -96,6 +96,7 @@ public class itemService
                             .set("adminId", i.getAdminId())
                             .set("itemType", i.getItemType())
                             .set("desc", i.getDesc())
+                            .set("category", i.getCategory())
                             .set("loc", i.getLoc())
                             .set("date", i.getDate());
         

@@ -12,7 +12,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="css/main.css" />
   </head>
   <body data-page="browse">
     <nav class="top-nav">
@@ -42,9 +42,9 @@
         </button>
 
         <div class="nav-left">
-          <a href="/index.html" class="nav-brand">
+          <a href="index.html" class="nav-brand">
             <img
-              src="/assets/logo.svg"
+              src="assets/logo.svg"
               alt="foundIT Logo"
               class="nav-logo"
               width="200"
@@ -55,9 +55,17 @@
 
         <div class="nav-actions">
           <div class="nav-links">
-            <a href="/browse.html" class="nav-link">Browse Items</a>
+            <a href="browse.html" class="nav-link">Browse Items</a>
+            <a href="admin.html" id="nav-staff-link" class="nav-link" hidden>
+              Create Listing
+            </a>
+            <a href="index.html" id="nav-signout-link" class="nav-link" hidden>
+              Sign Out
+            </a>
           </div>
-          <a href="/signin.html" class="btn btn-primary">Sign In</a>
+          <a href="signin.html" id="nav-auth-link" class="btn btn-primary">
+            Sign In
+          </a>
         </div>
       </div>
     </nav>
@@ -69,38 +77,30 @@
             <p class="section-eyebrow">Refine Results</p>
             <h1 id="browse-filters-heading">Browse campus listings</h1>
             <p>
-              Narrow public lost-and-found feed by keywords, categories and
-              locations.
+              Narrow public lost-and-found feed by category and location.
             </p>
           </div>
 
           <form class="filter-form" id="browseFilters">
             <label class="filter-group">
-              <span class="filter-label">Keyword</span>
-              <input
-                class="filter-input"
-                type="search"
-                name="keyword"
-                placeholder="Backpack, keys, water bottle"
-              />
-            </label>
-
-            <label class="filter-group">
               <span class="filter-label">Category</span>
               <select class="filter-select" name="category">
                 <option value="">All Categories</option>
-                <option value="Bag">Bags and Backpacks</option>
                 <option value="Electronics">Electronics</option>
-                <option value="Drinkware">Drinkware</option>
+                <option value="IDs & Cards">IDs & Cards</option>
+                <option value="Bags">Bags</option>
+                <option value="Keys & Wallets">Keys & Wallets</option>
                 <option value="Clothing">Clothing</option>
-                <option value="Accessories">Accessories</option>
+                <option value="School Supplies">School Supplies</option>
+                <option value="Personal Items">Personal Items</option>
+                <option value="Other">Other</option>
               </select>
             </label>
 
             <label class="filter-group">
               <span class="filter-label">Found Near</span>
               <select class="filter-select" name="foundNear">
-                <option value="">All Categories</option>
+                <option value="">All Locations</option>
                 <option value="belk library">Belk Library</option>
                 <option value="plemmons student union">
                   Plemmons Student Union
@@ -114,7 +114,7 @@
               </select>
             </label>
 
-            <label for="filter-group">
+            <label class="filter-group">
               <span class="filter-label">Return To</span>
               <select class="filter-select" name="returnTo">
                 <option value="">Any Front Desk</option>
@@ -122,7 +122,7 @@
                   Belk Library Front Desk
                 </option>
                 <option value="plemmons student union information desk">
-                  Pleemons Student Union Information Desk
+                  Plemmons Student Union Information Desk
                 </option>
                 <option value="student recreation center front desk">
                   Student Recreation Center Front Desk
@@ -136,35 +136,11 @@
               </select>
             </label>
 
-            <div class="filter-group">
-              <span class="filter-label">Avaliability</span>
-              <div class="filter-chip-row">
-                <span class="filter-chip">Ready to claim</span>
-                <span class="filter-chip">Recently added</span>
-              </div>
-            </div>
-
-            <label class="filter-group">
-              <span class="filter-label">Sort by</span>
-              <select class="filter-select" name="sort">
-                <option value="newest">Most recent</option>
-                <option value="oldest">Oldest first</option>
-                <option value="match">Closest match</option>
-                <option value="desk">Return desk</option>
-              </select>
-            </label>
-
             <div class="filter-actions">
               <button type="submit" class="btn btn-primary">
                 Apply Filters
               </button>
               <button type="reset" class="btn btn-secondary">Clear</button>
-            </div>
-
-            <div class="filter-note">
-              Anyone can browse. Standard accounts can sign in and review
-              listings. Desk workers sign in separately and use the report page
-              to post new items.
             </div>
           </form>
         </aside>
@@ -172,7 +148,7 @@
         <section class="browse-results" aria-label="Lost and Found listings">
           <div class="browse-results-header">
             <div>
-              <p class="section-eyebrow">Public Listins</p>
+              <p class="section-eyebrow">Public Listings</p>
               <h2>Campus lost-and-found items</h2>
               <p>
                 Live item listings load from the current lost-and-found
@@ -187,6 +163,154 @@
         </section>
       </section>
     </main>
-    <script src="/js/main.js"></script>
+
+    <div id="claim-modal" class="claim-modal" hidden>
+      <div class="claim-modal-backdrop" data-close-claim-modal></div>
+      <section
+        class="claim-modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="claim-modal-title"
+      >
+        <div class="claim-modal-header">
+          <div class="claim-modal-copy">
+            <p class="section-eyebrow">Start Claim</p>
+            <h2 id="claim-modal-title" class="admin-simple-section-title">
+              Start a claim
+            </h2>
+            <p id="claim-modal-item-copy" class="admin-simple-copy">
+              Collect the claimer details before releasing the item.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="btn btn-secondary claim-close"
+            data-close-claim-modal
+          >
+            Close
+          </button>
+        </div>
+
+        <form id="claim-form" class="admin-simple-form claim-form">
+          <input type="hidden" name="itemId" />
+
+          <div class="claim-form-grid">
+            <label class="filter-group">
+              <span class="filter-label">First Name</span>
+              <input
+                class="filter-input"
+                type="text"
+                name="firstName"
+                placeholder="Jamie"
+                required
+              />
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Last Name</span>
+              <input
+                class="filter-input"
+                type="text"
+                name="lastName"
+                placeholder="Doe"
+                required
+              />
+            </label>
+          </div>
+
+          <label class="filter-group">
+            <span class="filter-label">Claimer Type</span>
+            <select
+              id="claimant-type"
+              class="filter-select"
+              name="claimantType"
+              required
+            >
+              <option value="student">Student</option>
+              <option value="guest">Not a student</option>
+            </select>
+          </label>
+
+          <div id="claim-student-fields" class="claim-conditional-group">
+            <label class="filter-group">
+              <span class="filter-label">Student ID</span>
+              <input
+                id="claim-student-id"
+                class="filter-input"
+                type="text"
+                name="studentId"
+                placeholder="Banner ID or student ID"
+                required
+              />
+            </label>
+            <p class="claim-helper">
+              Confirm the student ID matches the claimer before releasing the item.
+            </p>
+          </div>
+
+          <div
+            id="claim-guest-fields"
+            class="claim-conditional-group claim-guest-panel"
+            hidden
+          >
+            <p class="claim-guest-note">
+              For non-students, ask to see a real ID and make sure it matches the
+              person's physical appearance before handing over the item.
+            </p>
+            <label class="claim-checkbox">
+              <input
+                id="claim-guest-verification"
+                type="checkbox"
+                name="guestVerification"
+              />
+              <span>I checked a real ID that matched the person.</span>
+            </label>
+          </div>
+
+          <div class="claim-form-grid">
+            <label class="filter-group">
+              <span class="filter-label">Phone Number</span>
+              <input
+                id="claim-phone"
+                class="filter-input"
+                type="tel"
+                name="phoneNum"
+                placeholder="(555) 555-5555"
+              />
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Email</span>
+              <input
+                id="claim-email"
+                class="filter-input"
+                type="email"
+                name="email"
+                placeholder="name@example.com"
+              />
+            </label>
+          </div>
+
+          <p class="claim-helper">
+            Phone number and email are required for non-students. Students can add
+            them too if you want claim follow-up details on file.
+          </p>
+
+          <div id="claim-status" class="status-banner" hidden></div>
+
+          <div class="admin-simple-actions">
+            <button type="submit" class="btn btn-primary">Save Claim</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-close-claim-modal
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script src="js/main.js"></script>
   </body>
 </html>

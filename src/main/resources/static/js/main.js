@@ -5,14 +5,34 @@ const staffSignInForm =
 const signInStatus = document.getElementById("signin-status");
 const adminCreateForm = document.getElementById("admin-create-form");
 const adminStatus = document.getElementById("admin-status");
-const adminListings = document.getElementById("admin-listings");
-const signOutLink = document.getElementById("staff-signout-link");
+const claimModal = document.getElementById("claim-modal");
+const claimForm = document.getElementById("claim-form");
+const claimStatus = document.getElementById("claim-status");
+const claimModalItemCopy = document.getElementById("claim-modal-item-copy");
+const claimantTypeSelect = document.getElementById("claimant-type");
+const claimStudentFields = document.getElementById("claim-student-fields");
+const claimStudentIdInput = document.getElementById("claim-student-id");
+const claimGuestFields = document.getElementById("claim-guest-fields");
+const claimGuestVerificationInput = document.getElementById(
+  "claim-guest-verification",
+);
+const claimPhoneInput = document.getElementById("claim-phone");
+const claimEmailInput = document.getElementById("claim-email");
+const navAuthLink = document.getElementById("nav-auth-link");
+const navStaffLink = document.getElementById("nav-staff-link");
+const signOutLink = document.getElementById("nav-signout-link");
 const browseFiltersForm = document.getElementById("browseFilters");
 const itemGrid = document.getElementById("itemGrid");
 const browseStatus = document.getElementById("browse-status");
 const browseResultsMeta = document.getElementById("browse-results-meta");
 
 let browseItemsState = [];
+let activeStaffUser = null;
+let claimRecordsByItemId = new Map();
+
+function resolveAppUrl(path) {
+  return new URL(path, window.location.href).toString();
+}
 
 navToggleButton?.addEventListener("click", () => {
   document.body.classList.toggle("nav-open");
@@ -53,6 +73,128 @@ function getStoredStaffUser() {
   }
 }
 
+function createClaimsByItemIdMap(claims) {
+  return new Map(
+    claims
+      .filter((claim) => claim && claim.itemId)
+      .map((claim) => [String(claim.itemId), claim]),
+  );
+}
+
+function clearStoredStaffUser() {
+  sessionStorage.removeItem("foundItStaffUser");
+}
+
+function setPublicNavigation() {
+  if (navStaffLink) {
+    navStaffLink.hidden = true;
+    navStaffLink.href = resolveAppUrl("admin.html");
+  }
+
+  if (signOutLink) {
+    signOutLink.hidden = true;
+    signOutLink.href = resolveAppUrl("index.html");
+  }
+
+  if (!navAuthLink) {
+    return;
+  }
+
+  navAuthLink.textContent = "Sign In";
+  navAuthLink.href = resolveAppUrl("signin.html");
+  navAuthLink.classList.remove("nav-user-link");
+  navAuthLink.removeAttribute("title");
+}
+
+function setStaffNavigation(staffUser) {
+  const username = String(staffUser?.username ?? "").trim();
+
+  if (navStaffLink) {
+    navStaffLink.hidden = false;
+    navStaffLink.href = resolveAppUrl("admin.html");
+  }
+
+  if (signOutLink) {
+    signOutLink.hidden = false;
+    signOutLink.href = resolveAppUrl("index.html");
+  }
+
+  if (!navAuthLink) {
+    return;
+  }
+
+  navAuthLink.textContent = username;
+  navAuthLink.href = resolveAppUrl("admin.html");
+  navAuthLink.classList.add("nav-user-link");
+  navAuthLink.title = `Signed in as ${username}`;
+}
+
+function applyStoredStaffNavigation() {
+  const storedUser = getStoredStaffUser();
+  const storedId = String(storedUser?.id ?? "").trim();
+  const storedUsername = String(storedUser?.username ?? "").trim();
+
+  if (!storedId || !storedUsername) {
+    setPublicNavigation();
+    return null;
+  }
+
+  setStaffNavigation({
+    id: storedId,
+    username: storedUsername,
+  });
+
+  return storedUser;
+}
+
+async function validateStoredStaffUser() {
+  const storedUser = getStoredStaffUser();
+  const storedId = String(storedUser?.id ?? "").trim();
+  const storedUsername = String(storedUser?.username ?? "").trim();
+
+  if (!storedId || !storedUsername) {
+    clearStoredStaffUser();
+    return null;
+  }
+
+  try {
+    const adminRecord = await requestJson(resolveAppUrl(`api/admins/${storedId}`));
+    const verifiedId = String(adminRecord?.id ?? "").trim();
+    const verifiedUsername = String(adminRecord?.username ?? "").trim();
+
+    if (!verifiedId || normalizeText(verifiedUsername) !== normalizeText(storedUsername)) {
+      clearStoredStaffUser();
+      return null;
+    }
+
+    const verifiedUser = {
+      id: verifiedId,
+      username: verifiedUsername,
+      firstName: String(adminRecord?.firstName ?? ""),
+      lastName: String(adminRecord?.lastName ?? ""),
+    };
+
+    sessionStorage.setItem("foundItStaffUser", JSON.stringify(verifiedUser));
+    return verifiedUser;
+  } catch {
+    clearStoredStaffUser();
+    return null;
+  }
+}
+
+async function updateStaffNavigation() {
+  applyStoredStaffNavigation();
+  const verifiedUser = await validateStoredStaffUser();
+
+  if (verifiedUser) {
+    setStaffNavigation(verifiedUser);
+    return verifiedUser;
+  }
+
+  setPublicNavigation();
+  return null;
+}
+
 async function requestJson(url, options = {}) {
   const response = await fetch(url, options);
   const payload = await response.json().catch(() => ({}));
@@ -82,6 +224,110 @@ function formatListingDate(value) {
   });
 }
 
+function formatClaimType(claimRecord) {
+  return claimRecord?.isAppUser ? "Student" : "Guest";
+}
+
+function formatClaimSummary(claimRecord) {
+  if (!claimRecord) {
+    return "";
+  }
+
+  const claimantName = [claimRecord.firstName, claimRecord.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const claimType = formatClaimType(claimRecord);
+  const detail = claimRecord?.isAppUser
+    ? `Student ID on file: ${escapeHtml(claimRecord.appId || "Not provided")}.`
+    : "Guest contact details are on file. Check a real ID at pickup.";
+
+  return `
+    <div class="claim-summary">
+      <p><strong>Claim in progress:</strong> ${escapeHtml(claimantName || "Unknown claimer")}</p>
+      <p>${escapeHtml(claimType)} claimant. ${detail}</p>
+    </div>
+  `;
+}
+
+function updateClaimFormState() {
+  if (!claimantTypeSelect) {
+    return;
+  }
+
+  const isStudent = claimantTypeSelect.value !== "guest";
+
+  if (claimStudentFields) {
+    claimStudentFields.hidden = !isStudent;
+  }
+
+  if (claimGuestFields) {
+    claimGuestFields.hidden = isStudent;
+  }
+
+  if (claimStudentIdInput) {
+    claimStudentIdInput.required = isStudent;
+  }
+
+  if (claimGuestVerificationInput) {
+    claimGuestVerificationInput.required = !isStudent;
+    if (isStudent) {
+      claimGuestVerificationInput.checked = false;
+    }
+  }
+
+  if (claimPhoneInput) {
+    claimPhoneInput.required = !isStudent;
+  }
+
+  if (claimEmailInput) {
+    claimEmailInput.required = !isStudent;
+  }
+}
+
+function closeClaimModal() {
+  if (!claimModal) {
+    return;
+  }
+
+  claimModal.hidden = true;
+  claimForm?.reset();
+  hideStatusBanner(claimStatus);
+
+  if (claimantTypeSelect) {
+    claimantTypeSelect.value = "student";
+  }
+
+  updateClaimFormState();
+}
+
+function openClaimModal(item) {
+  if (!claimModal || !claimForm || !item?.id) {
+    return;
+  }
+
+  claimForm.reset();
+  hideStatusBanner(claimStatus);
+
+  const itemIdField = claimForm.elements.namedItem("itemId");
+  if (itemIdField instanceof HTMLInputElement) {
+    itemIdField.value = item.id;
+  }
+
+  if (claimModalItemCopy) {
+    const title = item.itemType || "Selected item";
+    const location = item.loc || "Unknown location";
+    claimModalItemCopy.textContent = `Collect claimer details for ${title}, found at ${location}.`;
+  }
+
+  if (claimantTypeSelect) {
+    claimantTypeSelect.value = "student";
+  }
+
+  updateClaimFormState();
+  claimModal.hidden = false;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -96,13 +342,13 @@ function normalizeText(value) {
 }
 
 function inferBrowseCategory(item) {
-  const searchText = normalizeText(`${item.itemType} ${item.desc}`);
+  const savedCategory = String(item?.category ?? "").trim();
 
-  if (
-    /(backpack|bag|bookbag|duffel|tote|purse|satchel|luggage)/.test(searchText)
-  ) {
-    return "Bag";
+  if (savedCategory) {
+    return savedCategory;
   }
+
+  const searchText = normalizeText(`${item.itemType} ${item.desc}`);
 
   if (
     /(charger|laptop|airpods|headphones|earbuds|phone|ipad|tablet|macbook|electronics|usb|camera)/.test(
@@ -112,8 +358,22 @@ function inferBrowseCategory(item) {
     return "Electronics";
   }
 
-  if (/(bottle|tumbler|hydro flask|mug|cup|thermos|drinkware)/.test(searchText)) {
-    return "Drinkware";
+  if (
+    /(student id|id card|identification|license|passport|badge|credit card|debit card|gift card|app card|\bcards?\b)/.test(
+      searchText,
+    )
+  ) {
+    return "IDs & Cards";
+  }
+
+  if (
+    /(backpack|bag|bookbag|duffel|tote|purse|satchel|luggage)/.test(searchText)
+  ) {
+    return "Bags";
+  }
+
+  if (/(wallet|keys|keychain|key fob|fob|lanyard)/.test(searchText)) {
+    return "Keys & Wallets";
   }
 
   if (
@@ -125,14 +385,22 @@ function inferBrowseCategory(item) {
   }
 
   if (
-    /(wallet|keys|keychain|lanyard|id|badge|glasses|watch|umbrella|accessory)/.test(
+    /(notebook|textbook|book|binder|folder|planner|calculator|pen|pencil|eraser|highlighter|marker|school supplies?)/.test(
       searchText,
     )
   ) {
-    return "Accessories";
+    return "School Supplies";
   }
 
-  return "Campus Listing";
+  if (
+    /(bottle|tumbler|hydro flask|mug|cup|thermos|glasses|sunglasses|watch|umbrella|jewelry|ring|bracelet|necklace|makeup|cosmetic|toiletry|personal item)/.test(
+      searchText,
+    )
+  ) {
+    return "Personal Items";
+  }
+
+  return "Other";
 }
 
 function inferReturnDesk(location) {
@@ -265,6 +533,17 @@ function renderBrowseItems(
       const returnDesk = escapeHtml(inferReturnDesk(item.loc));
       const category = escapeHtml(inferBrowseCategory(item));
       const dateLabel = formatListingDate(item.date);
+      const claimRecord = claimRecordsByItemId.get(String(item.id));
+      const claimSummary =
+        activeStaffUser?.id && claimRecord ? formatClaimSummary(claimRecord) : "";
+      const claimButton =
+        activeStaffUser?.id && item.id
+          ? claimRecord
+            ? '<button type="button" class="btn btn-secondary" disabled>Claim Started</button>'
+            : `<button type="button" class="btn btn-secondary" data-start-claim-id="${escapeHtml(item.id)}">
+                Start Claim
+              </button>`
+          : "";
       const tags = [
         category,
         isRecentlyAdded(item.date) ? "Recently added" : null,
@@ -298,6 +577,8 @@ function renderBrowseItems(
               <span class="meta-value">${dateLabel}</span>
             </div>
           </div>
+          ${claimSummary}
+          ${claimButton ? `<div class="item-actions">${claimButton}</div>` : ""}
         </article>
       `;
     })
@@ -377,12 +658,19 @@ async function loadBrowseListings() {
   updateStatusBanner(browseStatus, "Loading live listings...", "");
 
   try {
-    const items = await requestJson("/api/items");
+    const [items, claims] = await Promise.all([
+      requestJson(resolveAppUrl("api/items")),
+      activeStaffUser?.id
+        ? requestJson(resolveAppUrl("api/foundItems")).catch(() => [])
+        : Promise.resolve([]),
+    ]);
     browseItemsState = Array.isArray(items) ? items : [];
+    claimRecordsByItemId = createClaimsByItemIdMap(Array.isArray(claims) ? claims : []);
     hideStatusBanner(browseStatus);
     applyBrowseFilters();
   } catch (error) {
     browseItemsState = [];
+    claimRecordsByItemId = new Map();
     updateStatusBanner(
       browseStatus,
       error.message || "Unable to load live listings right now.",
@@ -390,69 +678,6 @@ async function loadBrowseListings() {
     );
     renderBrowseItems([], "Live listings are temporarily unavailable.");
     updateBrowseResultsMeta(0, 0);
-  }
-}
-
-function renderAdminListings(items) {
-  if (!adminListings) {
-    return;
-  }
-
-  if (!items.length) {
-    adminListings.innerHTML =
-      '<p class="admin-simple-copy">No listings have been created yet.</p>';
-    return;
-  }
-
-  adminListings.innerHTML = items
-    .map((item) => {
-      const title = escapeHtml(item.itemType || "Untitled item");
-      const description = escapeHtml(item.desc || "No description provided.");
-      const location = escapeHtml(item.loc || "Location not provided");
-      const dateLabel = formatListingDate(item.date);
-      const actionButton = item.id
-        ? `<button type="button" class="btn btn-primary" data-delete-item-id="${item.id}">
-            Mark Returned
-          </button>`
-        : "";
-
-      return `
-        <article class="admin-simple-listing">
-          <div>
-            <h3>${title}</h3>
-            <p>${description}</p>
-            <p>Found at ${location}. Added ${dateLabel}.</p>
-          </div>
-          <div class="admin-simple-actions">
-            ${actionButton}
-          </div>
-        </article>
-      `;
-    })
-    .join("");
-}
-
-async function loadAdminListings() {
-  if (!adminListings) {
-    return;
-  }
-
-  adminListings.innerHTML =
-    '<p class="admin-simple-copy">Loading current listings...</p>';
-
-  try {
-    const items = await requestJson("/api/items");
-    const sortedItems = [...items].sort((left, right) => {
-      const leftTime = Date.parse(left.date || "") || 0;
-      const rightTime = Date.parse(right.date || "") || 0;
-      return rightTime - leftTime;
-    });
-
-    renderAdminListings(sortedItems);
-  } catch (error) {
-    adminListings.innerHTML = `<p class="admin-simple-copy">${
-      error.message || "Unable to load current listings."
-    }</p>`;
   }
 }
 
@@ -466,7 +691,7 @@ staffSignInForm?.addEventListener("submit", async (event) => {
   updateStatusBanner(signInStatus, "Checking your credentials...", "is-success");
 
   try {
-    const payload = await requestJson("/api/auth/signin", {
+    const payload = await requestJson(resolveAppUrl("api/auth/signin"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -475,7 +700,7 @@ staffSignInForm?.addEventListener("submit", async (event) => {
     });
 
     sessionStorage.setItem("foundItStaffUser", JSON.stringify(payload));
-    window.location.href = "/admin.html";
+    window.location.href = resolveAppUrl("index.html");
   } catch (error) {
     updateStatusBanner(
       signInStatus,
@@ -485,14 +710,17 @@ staffSignInForm?.addEventListener("submit", async (event) => {
   }
 });
 
-signOutLink?.addEventListener("click", () => {
-  sessionStorage.removeItem("foundItStaffUser");
+signOutLink?.addEventListener("click", (event) => {
+  event.preventDefault();
+  clearStoredStaffUser();
+  setPublicNavigation();
+  window.location.href = resolveAppUrl("index.html");
 });
 
 adminCreateForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const staffUser = getStoredStaffUser();
+  const staffUser = await validateStoredStaffUser();
 
   if (!staffUser?.id) {
     updateStatusBanner(
@@ -500,9 +728,9 @@ adminCreateForm?.addEventListener("submit", async (event) => {
       "Your staff session has expired. Sign in again to create listings.",
       "is-error",
     );
-    sessionStorage.removeItem("foundItStaffUser");
+    setPublicNavigation();
     window.setTimeout(() => {
-      window.location.href = "/signin.html";
+      window.location.href = resolveAppUrl("signin.html");
     }, 900);
     return;
   }
@@ -512,12 +740,13 @@ adminCreateForm?.addEventListener("submit", async (event) => {
   const formData = new FormData(adminCreateForm);
   const itemType = String(formData.get("itemType") ?? "").trim();
   const desc = String(formData.get("desc") ?? "").trim();
+  const category = String(formData.get("category") ?? "").trim();
   const loc = String(formData.get("loc") ?? "").trim();
 
   updateStatusBanner(adminStatus, "Creating listing...", "is-success");
 
   try {
-    await requestJson("/api/items", {
+    await requestJson(resolveAppUrl("api/items"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -526,13 +755,13 @@ adminCreateForm?.addEventListener("submit", async (event) => {
         adminId: staffUser.id,
         itemType,
         desc,
+        category,
         loc,
       }),
     });
 
     adminCreateForm.reset();
     updateStatusBanner(adminStatus, "Listing created successfully.", "is-success");
-    await loadAdminListings();
   } catch (error) {
     updateStatusBanner(
       adminStatus,
@@ -542,50 +771,127 @@ adminCreateForm?.addEventListener("submit", async (event) => {
   }
 });
 
-adminListings?.addEventListener("click", async (event) => {
-  const deleteButton =
+itemGrid?.addEventListener("click", async (event) => {
+  const claimButton =
     event.target instanceof Element
-      ? event.target.closest("[data-delete-item-id]")
+      ? event.target.closest("[data-start-claim-id]")
       : null;
 
-  if (!deleteButton) {
+  if (claimButton) {
+    const { startClaimId } = claimButton.dataset;
+
+    if (!startClaimId) {
+      return;
+    }
+
+    const selectedItem = browseItemsState.find((item) => String(item.id) === startClaimId);
+    openClaimModal(selectedItem);
     return;
-  }
-
-  const { deleteItemId } = deleteButton.dataset;
-
-  if (!deleteItemId) {
-    return;
-  }
-
-  deleteButton.disabled = true;
-
-  try {
-    await requestJson(`/api/items/${deleteItemId}`, {
-      method: "DELETE",
-    });
-    updateStatusBanner(adminStatus, "Listing removed.", "is-success");
-    await loadAdminListings();
-  } catch (error) {
-    updateStatusBanner(
-      adminStatus,
-      error.message || "Unable to remove the listing.",
-      "is-error",
-    );
-    deleteButton.disabled = false;
   }
 });
 
-if (adminCreateForm) {
-  const staffUser = getStoredStaffUser();
+claimantTypeSelect?.addEventListener("change", () => {
+  updateClaimFormState();
+});
+
+claimForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const staffUser = await validateStoredStaffUser();
 
   if (!staffUser?.id) {
-    sessionStorage.removeItem("foundItStaffUser");
-    window.location.href = "/signin.html";
-  } else {
-    loadAdminListings();
+    updateStatusBanner(
+      claimStatus,
+      "Your staff session has expired. Sign in again to start a claim.",
+      "is-error",
+    );
+    setPublicNavigation();
+    window.setTimeout(() => {
+      window.location.href = resolveAppUrl("signin.html");
+    }, 900);
+    return;
+  }
+
+  const formData = new FormData(claimForm);
+  const claimantType = String(formData.get("claimantType") ?? "student");
+  const itemId = String(formData.get("itemId") ?? "").trim();
+  const firstName = String(formData.get("firstName") ?? "").trim();
+  const lastName = String(formData.get("lastName") ?? "").trim();
+  const studentId = String(formData.get("studentId") ?? "").trim();
+  const phoneNum = String(formData.get("phoneNum") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const guestVerification = formData.get("guestVerification");
+  const isStudent = claimantType !== "guest";
+
+  if (!itemId) {
+    updateStatusBanner(claimStatus, "Choose a listing before starting a claim.", "is-error");
+    return;
+  }
+
+  if (!isStudent && !guestVerification) {
+    updateStatusBanner(
+      claimStatus,
+      "Verify the guest's real ID before saving the claim.",
+      "is-error",
+    );
+    return;
+  }
+
+  updateStatusBanner(claimStatus, "Saving claim details...", "is-success");
+
+  try {
+    await requestJson(resolveAppUrl("api/foundItems"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        itemId,
+        firstName,
+        lastName,
+        isAppUser: isStudent,
+        appId: isStudent ? studentId : "",
+        phoneNum,
+        email,
+      }),
+    });
+
+    closeClaimModal();
+    updateStatusBanner(browseStatus, "Claim started successfully.", "is-success");
+    await loadBrowseListings();
+  } catch (error) {
+    updateStatusBanner(
+      claimStatus,
+      error.message || "Unable to start the claim.",
+      "is-error",
+    );
+  }
+});
+
+document.querySelectorAll("[data-close-claim-modal]").forEach((element) => {
+  element.addEventListener("click", () => {
+    closeClaimModal();
+  });
+});
+
+async function initializePage() {
+  const verifiedStaffUser = await updateStaffNavigation();
+  activeStaffUser = verifiedStaffUser;
+  updateClaimFormState();
+
+  if (adminCreateForm) {
+    if (!verifiedStaffUser?.id) {
+      window.location.href = resolveAppUrl("signin.html");
+      return;
+    }
+  }
+  
+  if (itemGrid) {
+    await loadBrowseListings();
   }
 }
+
+initializePage();
 
 browseFiltersForm?.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -599,7 +905,3 @@ browseFiltersForm?.addEventListener("reset", () => {
     applyBrowseFilters();
   }, 0);
 });
-
-if (itemGrid) {
-  loadBrowseListings();
-}

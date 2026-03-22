@@ -4,14 +4,12 @@ package foundIT.demo.service;
 import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,27 +33,32 @@ public class foundItemService
     {
         if((iService.getItemById(i.getItemId())).isEmpty())
         {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a valid admin");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item record not found");
         }
 
         if(itemFound(i))
         {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item already found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A claim has already been started for this item");
         }
 
         if(i.getIsAppUser())
         {
-            if((i.getAppId()) == null)
+            if(i.getAppId() == null || i.getAppId().isBlank())
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need AppID for App User");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID is required for student claims");
             }
         }
         else
         {
-            if((i.getPhoneNum()) == null || (i.getEmail()) == null)
+            if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone num must be filled for Guests");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone number must be filled for guest claims");
             }
+        }
+
+        if(i.getDate() == null)
+        {
+            i.setDate(Instant.now());
         }
 
         return mongoTemplate.save(i);
@@ -77,21 +80,21 @@ public class foundItemService
     {
         if((iService.getItemById(i.getItemId())).isEmpty())
         {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a valid admin");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item record not found");
         }
 
         if(i.getIsAppUser())
         {
-            if((i.getAppId()).isEmpty())
+            if(i.getAppId() == null || i.getAppId().isBlank())
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need AppID for App User");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student ID is required for student claims");
             }
         }
         else
         {
-            if((i.getPhoneNum()).isEmpty() || (i.getEmail()).isEmpty())
+            if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())
             {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone num must be filled for Guests");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone number must be filled for guest claims");
             }
         }
 
@@ -101,10 +104,11 @@ public class foundItemService
                             .set("itemId", i.getItemId())
                             .set("firstName", i.getFirstName())
                             .set("lastName", i.getLastName())
-                            .set("isAppUSer", i.getIsAppUser())
+                            .set("isAppUser", i.getIsAppUser())
                             .set("appId", i.getAppId())
                             .set("phoneNum", i.getPhoneNum())
-                            .set("email", i.getEmail());
+                            .set("email", i.getEmail())
+                            .set("date", i.getDate() == null ? Instant.now() : i.getDate());
         
         mongoTemplate.updateFirst(query, updatedFoundItem, foundItem.class);
         return getFoundItemById(id).orElse(null);
@@ -133,21 +137,5 @@ public class foundItemService
             }
         }
         return false;
-    }
-
-    @Scheduled(fixedRate = 60000) // runs every 60 seconds
-    public void cleanupExpiredFoundItems()
-    {
-        Instant todaysDate = Instant.now();
-
-        Query query = new Query(Criteria.where("date").lt(todaysDate));
-
-        List<foundItem> expiredItems = mongoTemplate.find(query, foundItem.class);
-
-        for (foundItem foundItem : expiredItems) 
-        {
-            iService.deleteItem(foundItem.getItemId());
-            mongoTemplate.remove(foundItem);
-        }
     }
 }

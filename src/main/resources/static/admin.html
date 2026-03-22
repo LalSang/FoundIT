@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="css/main.css" />
   </head>
 
   <body data-page="admin">
@@ -45,9 +45,9 @@
         </button>
 
         <div class="nav-left">
-          <a href="/index.html" class="nav-brand">
+          <a href="index.html" class="nav-brand">
             <img
-              src="/assets/logo.svg"
+              src="assets/logo.svg"
               alt="foundIT Logo"
               class="nav-logo"
               width="200"
@@ -58,14 +58,16 @@
 
         <div class="nav-actions">
           <div class="nav-links">
-            <a href="/browse.html" class="nav-link">Browse Items</a>
+            <a href="browse.html" class="nav-link">Browse Items</a>
+            <a href="admin.html" id="nav-staff-link" class="nav-link" hidden>
+              Create Listing
+            </a>
+            <a href="index.html" id="nav-signout-link" class="nav-link" hidden>
+              Sign Out
+            </a>
           </div>
-          <a
-            href="/signin.html"
-            id="staff-signout-link"
-            class="btn btn-primary"
-          >
-            Sign Out
+          <a href="signin.html" id="nav-auth-link" class="btn btn-primary">
+            Sign In
           </a>
         </div>
       </div>
@@ -77,8 +79,8 @@
           <p class="section-eyebrow">Staff View</p>
           <h1 class="admin-simple-title">Worker and Admin Page</h1>
           <p class="admin-simple-copy">
-            Desk workers can post found items and remove listings when items are
-            returned. Admins can also manage staff and review claim issues.
+            Desk workers can post found items here. Start claimant intake from the
+            browse page after you verify a listing with the person claiming it.
           </p>
         </header>
 
@@ -107,6 +109,21 @@
             </label>
 
             <label class="filter-group">
+              <span class="filter-label">Category</span>
+              <select class="filter-select" name="category" required>
+                <option value="">Select a category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="IDs & Cards">IDs & Cards</option>
+                <option value="Bags">Bags</option>
+                <option value="Keys & Wallets">Keys & Wallets</option>
+                <option value="Clothing">Clothing</option>
+                <option value="School Supplies">School Supplies</option>
+                <option value="Personal Items">Personal Items</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+
+            <label class="filter-group">
               <span class="filter-label">Found Location</span>
               <input
                 class="filter-input"
@@ -125,11 +142,6 @@
         </section>
 
         <section class="admin-simple-card">
-          <h2 class="admin-simple-section-title">Current Listings</h2>
-          <div id="admin-listings" aria-live="polite"></div>
-        </section>
-
-        <section class="admin-simple-card">
           <h2 class="admin-simple-section-title">Admin Only</h2>
           <ul class="admin-simple-list">
             <li>Manage worker accounts</li>
@@ -140,6 +152,6 @@
       </section>
     </main>
 
-    <script src="/js/main.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>
