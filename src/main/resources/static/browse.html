@@ -155,7 +155,7 @@
             </label>
 
             <div class="filter-actions">
-              <button type="button" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary">
                 Apply Filters
               </button>
               <button type="reset" class="btn btn-secondary">Clear</button>
@@ -179,89 +179,11 @@
                 database. Only desk worker accounts can create new postings.
               </p>
             </div>
+            <p id="browse-results-meta" class="browse-toolbar"></p>
           </div>
 
-          <div id="itemGrid" class="item-grid">
-            <article class="item-card">
-              <div class="item-description">
-                <h3 class="item-title">Blue Hydro Flask Water Bottle</h3>
-                <p>
-                  Found outside Belk Library with a black sticker on the side
-                  and a small dent near the base.
-                </p>
-              </div>
-
-              <div class="item-tags">
-                <span class="item-tag">Drinkware</span>
-                <span class="item-tag">Recently added</span>
-                <span class="item-tag">Ready to claim</span>
-              </div>
-
-              <div class="item-meta">
-                <div class="item-meta-row">
-                  <span class="meta-label">Found Near</span>
-                  <span class="meta-value">Belk Library</span>
-                </div>
-                <div class="item-meta-row">
-                  <span class="meta-label">Return To</span>
-                  <span class="meta-value">Belk Library Front Desk</span>
-                </div>
-                <div class="item-meta-row">
-                  <span class="meta-label">Date Added</span>
-                  <span class="meta-value">March 21, 2026</span>
-                </div>
-              </div>
-
-              <div class="item-actions">
-                <button type="button" class="btn btn-secondary">
-                  View Details
-                </button>
-                <button type="button" class="btn btn-primary">
-                  Start Claim
-                </button>
-              </div>
-            </article>
-
-            <article class="item-card">
-              <div class="item-description">
-                <h3 class="item-title">Silver MacBook Charger</h3>
-                <p>
-                  Left in a second-floor study room at Plemmons Student Union
-                  with a white cable tie wrapped near the adapter.
-                </p>
-              </div>
-
-              <div class="item-tags">
-                <span class="item-tag">Electronics</span>
-                <span class="item-tag">High priority</span>
-                <span class="item-tag">Ready to claim</span>
-              </div>
-
-              <div class="item-meta">
-                <div class="item-meta-row">
-                  <span class="meta-label">Found Near</span>
-                  <span class="meta-value">Plemmons Student Union</span>
-                </div>
-                <div class="item-meta-row">
-                  <span class="meta-label">Return To</span>
-                  <span class="meta-value">Information Desk</span>
-                </div>
-                <div class="item-meta-row">
-                  <span class="meta-label">Date Added</span>
-                  <span class="meta-value">March 20, 2026</span>
-                </div>
-              </div>
-
-              <div class="item-actions">
-                <button type="button" class="btn btn-secondary">
-                  View Details
-                </button>
-                <button type="button" class="btn btn-primary">
-                  Start Claim
-                </button>
-              </div>
-            </article>
-          </div>
+          <div id="browse-status" class="status-banner" hidden></div>
+          <div id="itemGrid" class="item-grid" aria-live="polite"></div>
         </section>
       </section>
     </main>

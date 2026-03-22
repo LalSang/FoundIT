@@ -691,6 +691,9 @@ a {
 
 .browse-toolbar {
 	max-width: 320px;
+	text-align: right;
+	font-weight: 600;
+	align-self: center;
 }
 
 .empty-state {
@@ -701,6 +704,10 @@ a {
 	color: var(--text-secondary);
 	font-size: 0.98rem;
 	line-height: 1.6;
+}
+
+.item-grid > .empty-state {
+	grid-column: 1 / -1;
 }
 
 .status-banner {
