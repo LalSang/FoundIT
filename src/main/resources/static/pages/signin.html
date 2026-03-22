@@ -69,46 +69,38 @@
       <section class="auth-shell">
         <section class="auth-card" aria-labelledby="staff-signin-heading">
           <p class="section-eyebrow">Staff Access</p>
-          <h2 id="staff-signin-heading" class="auth-card-title">
-            Staff Sign In
-          </h2>
-          <p class="auth-card-copy">
+          <h2 id="staff-signin-heading" class="auth-card-title">SIGN IN</h2>
+          <!-- <p class="auth-card-copy">
             Desk worker and administrator access only.
-          </p>
+          </p> -->
 
-          <form id="staff-signin-form" class="staff-signin-form">
+          <form class="staff-signin-form">
             <label class="auth-field">
               <span class="filter-label">Username</span>
               <input
-                id="signin-username"
                 class="filter-input"
                 type="text"
                 name="username"
                 autocomplete="username"
                 placeholder="Enter your staff username"
-                required
               />
             </label>
 
             <label class="auth-field">
               <span class="filter-label">Password</span>
               <input
-                id="signin-password"
                 class="filter-input"
                 type="password"
                 name="password"
                 autocomplete="current-password"
                 placeholder="Enter your password"
-                required
               />
             </label>
 
-            <button type="submit" class="btn btn-primary auth-submit">
+            <button type="button" class="btn btn-primary auth-submit">
               Sign In
             </button>
           </form>
-
-          <div id="signin-status" class="status-banner" hidden></div>
         </section>
       </section>
     </main>
