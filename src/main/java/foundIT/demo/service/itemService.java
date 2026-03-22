@@ -1,13 +1,10 @@
 package foundIT.demo.service;
 
 
-<<<<<<< HEAD
-import java.time.Instant;
-=======
 import java.util.ArrayList;
->>>>>>> 0e93583 (claimed)
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -87,9 +84,9 @@ public class itemService
         return mongoTemplate.find(query, item.class);
     }
 
-    // public List<item> getNotFound()
-    // {
-    //     List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
+    public List<item> getNotFound()
+    {
+        List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
 
         List<String> foundIds = foundItems.stream()
             .map(foundItem::getItemId)
