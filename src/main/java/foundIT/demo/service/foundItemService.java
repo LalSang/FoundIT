@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -114,6 +115,7 @@ public class foundItemService
         return getFoundItemById(id).orElse(null);
     }
 
+    @Scheduled (fixedRate = 60000)
     public boolean deleteFoundItem(String id)
     {
         var found = mongoTemplate.findById(id, foundItem.class);
