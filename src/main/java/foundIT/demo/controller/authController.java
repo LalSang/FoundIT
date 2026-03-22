@@ -26,11 +26,21 @@ public class authController {
 
     private final adminService aService;
 
+    /**
+     * 
+     * @param aService - Allows the use of adminService functinos in this class
+     */
     public authController(adminService aService)
     {
         this.aService = aService;
     }
 
+    // Create - Post /auth/signin
+    /**
+     * 
+     * @param request - The sign in request that is both valid and a RequestBody
+     * @return - 401 if username or password is incorrect
+     */
     @PostMapping("/signin")
     public ResponseEntity<Map<String, Object>> signIn(@Valid @RequestBody SignInRequest request)
     {
@@ -53,6 +63,11 @@ public class authController {
         return ResponseEntity.ok(responseBody);
     }
 
+    /**handleServiceUnavailabe
+     *  Catches Exceptions and informs the user the Exception is happening
+     * 
+     * @return - 503 Error and the message that the Database connection failed
+     */
     @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<Map<String, Object>> handleServiceUnavailable()
     {
@@ -60,12 +75,19 @@ public class authController {
                 .body(Map.of("message", "Sign in is temporarily unavailable. Database connection failed."));
     }
 
+    // holds the Username and Password from the SignInRequest
     public record SignInRequest(
             @NotBlank(message = "Username is required") String username,
             @NotBlank(message = "Password is required") String password)
     {
     }
 
+    /**authenticateAdmin
+     *  Trys to check if the username and password are correct and catches the exception if it fails
+     * 
+     * @param request - The username and password of the sign in request
+     * @return - If the sign in was susccesful or not - Throws Error if authentication fails
+     */
     private java.util.Optional<admin> authenticateAdmin(SignInRequest request)
     {
         try
@@ -79,11 +101,13 @@ public class authController {
         }
     }
 
+    // Makes null into empty
     private String emptyIfNull(String value)
     {
         return value == null ? "" : value;
     }
 
+    // Makes a custom Exception for any errors thrown on sign in
     private static final class ServiceUnavailableException extends RuntimeException
     {
         private static final long serialVersionUID = 1L;
