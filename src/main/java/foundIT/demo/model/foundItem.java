@@ -3,7 +3,9 @@ package foundIT.demo.model;
 import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -38,7 +40,9 @@ public class foundItem {
     
     private String email;
 
+    @Indexed(expireAfter = "2m")
     private Instant date;
+
 
 
     public foundItem(String itemId, String firstName, String lastName, boolean isAppUser, String appId, String phoneNum, String email)
