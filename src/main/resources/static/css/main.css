@@ -69,7 +69,8 @@ a {
 
 .nav-logo {
 	height: 28px;
-	width: 99px;
+	width: auto;
+	max-width: 110px;
 	display: block;
 }
 
@@ -767,7 +768,7 @@ a {
 
 .admin-simple-title {
     font-size: clamp(2rem, 4vw, 2.7rem);
-    line-height: 1.02;
+    line-height: 1.1;
     letter-spacing: -0.04em;
 }
 
