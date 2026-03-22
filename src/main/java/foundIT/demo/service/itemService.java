@@ -25,12 +25,7 @@ public class itemService
     private final MongoTemplate mongoTemplate;
 
 
-    /**itemService
-     *  Class Constructor
-     * 
-     * @param mongoTemplate - The template for the mongo database
-     * @param aService - adminService object so this class is able to run adminService functions
-     */
+    /** Wires the Mongo access layer and admin validation dependency. */
     public itemService(MongoTemplate mongoTemplate, adminService aService)
     {
         this.mongoTemplate = mongoTemplate;
@@ -38,12 +33,7 @@ public class itemService
         
     }
 
-    /**createItem
-     *  Creates an item and adds it to the database
-     * 
-     * @param i - The item to be added
-     * @return - The item if successfully added nothing if not
-     */
+    /** Validates the admin, fills in a default timestamp, and saves a new item. */
     public item createItem(item i)
     {
         if((aService.getAdminById(i.getAdminId())).isEmpty())
@@ -59,23 +49,14 @@ public class itemService
         return mongoTemplate.save(i);
     }
 
-    /**getAllItems
-     *  Return a list of all items in the database
-     * 
-     * @return - A list of items
-     */
+    /** Returns every item currently stored in MongoDB. */
     public List<item> getAllItems()
     {
         
         return mongoTemplate.findAll(item.class);
     }
 
-    /**getType
-     *  Theoretically returns all items of a certain type
-     * 
-     * @param type - The type of item to return
-     * @return - A list of all items with the inputted type
-     */
+    /** Returns items whose saved item type matches the requested value. */
     public List<item> getType(String type)
     {
         Query query = new Query();
@@ -83,10 +64,10 @@ public class itemService
         return  mongoTemplate.find(query, item.class);
     }
 
-    /**getUnclaimedItems
-     *  Finds all items that are in the item table but not in the foundItem table
-     * 
-     * @return - A list with all unclaimed items
+    /**
+     * Returns only listings that do not already have a matching claim record.
+     * The method first gathers claimed item ids from the found-item collection and
+     * then excludes those ids from the item query.
      */
     public List<item> getUnclaimedItems()
     {
@@ -123,11 +104,7 @@ public class itemService
     //     query.addCriteria(Criteria.where("_id").nin(foundIds));
     //     return  mongoTemplate.find(query, item.class);
     // }
-    /**getClaimed
-     *  Finds all items in the item table that have their item id saved in the foundItem table
-     * 
-     * @return - A list of all claimed items
-     */
+    /** Returns items whose ids appear in the claim records collection. */
     public List<item> getClaimed()
     {
         List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
@@ -144,12 +121,7 @@ public class itemService
     
 
 
-    /**getItemById
-     *  Find the item with the corresponding id
-     * 
-     * @param id - Inputted id of the item
-     * @return - Returns the item if the id exists an empty Optional variable if not
-     */
+    /** Looks up a single item by id and wraps the result in an Optional. */
     public Optional<item> getItemById(String id)
     {
         var item = mongoTemplate.findById(id, item.class);
@@ -157,13 +129,7 @@ public class itemService
         return Optional.ofNullable(item);
     }
 
-    /**updateItem
-     *  Updates a preexisting item
-     * 
-     * @param id - The Id of the item to update
-     * @param i - The new info
-     * @return - The updated item
-     */
+    /** Rewrites the editable fields for an existing item after admin validation. */
     public item updateItem(String id, item i)
     {
         if((aService.getAdminById(i.getAdminId())).isEmpty())
@@ -186,12 +152,7 @@ public class itemService
         return getItemById(id).orElse(null);
     }
 
-    /**deleteItem
-     *  Deletes an item from the database
-     * 
-     * @param id - The id of the item to delete
-     * @return - True if successful false if not
-     */
+    /** Deletes an item by id and reports whether Mongo removed anything. */
     public boolean deleteItem(String id)
     {
         var query =new Query(Criteria.where("id").is(id));

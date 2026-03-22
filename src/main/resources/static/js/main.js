@@ -33,20 +33,27 @@ const dom = {
   claimEmailInput: document.getElementById("claim-email"),
 };
 
+// This will save us time by making it so that
+// when users are not log in is null but when user do log in
+// it will give username and their role
 const state = {
   activeStaffUser: null,
   browseItems: [],
 };
 
-// Small helper so links still work if the app is not served from "/".
+// Resolves app-relative links even when the site is hosted from a subpath.
 function resolveAppUrl(path) {
   return new URL(path, window.location.href).toString();
 }
 
+// Normalizes text so filtering and comparisons are case-insensitive.
 function normalizeText(value) {
-  return String(value ?? "").trim().toLowerCase();
+  return String(value ?? "")
+    .trim()
+    .toLowerCase();
 }
 
+// Escapes user-controlled text before it is injected into HTML strings.
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -56,6 +63,7 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+// Formats a listing or claim date for display and falls back gracefully.
 function formatListingDate(value) {
   if (!value) {
     return "Recently added";
@@ -74,6 +82,7 @@ function formatListingDate(value) {
   });
 }
 
+// Shows a status message with the optional success/error styling.
 function updateStatusBanner(element, message, variant = "") {
   if (!element) {
     return;
@@ -84,6 +93,7 @@ function updateStatusBanner(element, message, variant = "") {
   element.className = variant ? `status-banner ${variant}` : "status-banner";
 }
 
+// Hides a status banner and resets its message and styling.
 function hideStatusBanner(element) {
   if (!element) {
     return;
@@ -94,6 +104,7 @@ function hideStatusBanner(element) {
   element.className = "status-banner";
 }
 
+// here is basically where js collect data, turn to json and send it with fetch
 async function requestJson(url, options = {}) {
   const response = await fetch(url, options);
   const payload = await response.json().catch(() => ({}));
@@ -105,7 +116,10 @@ async function requestJson(url, options = {}) {
   return payload;
 }
 
-// Keep staff session in sessionStorage so refreshes feel normal.
+//These parts handles staff login session
+//So if admin log in they see different webpage compare to public
+
+// Reads the cached staff session from sessionStorage.
 function getStoredStaffUser() {
   const rawUser = sessionStorage.getItem("foundItStaffUser");
 
@@ -121,14 +135,17 @@ function getStoredStaffUser() {
   }
 }
 
+// Persists the current staff session for later page loads.
 function saveStaffUser(user) {
   sessionStorage.setItem("foundItStaffUser", JSON.stringify(user));
 }
 
+// Clears the saved staff session from browser storage.
 function clearStoredStaffUser() {
   sessionStorage.removeItem("foundItStaffUser");
 }
 
+// Switches the nav into its public state and hides staff-only links.
 function showPublicNavigation() {
   if (dom.navStaffLink) {
     dom.navStaffLink.hidden = true;
@@ -155,6 +172,7 @@ function showPublicNavigation() {
   dom.navAuthLink.removeAttribute("title");
 }
 
+// Switches the nav into its signed-in state for staff users.
 function showStaffNavigation(staffUser) {
   const username = String(staffUser?.username ?? "").trim();
 
@@ -183,7 +201,7 @@ function showStaffNavigation(staffUser) {
   dom.navAuthLink.title = `Signed in as ${username}`;
 }
 
-// Show what we have in storage first, then re-check it with the backend.
+// Paints the saved session immediately so refreshes feel responsive.
 function paintStoredNavigation() {
   const storedUser = getStoredStaffUser();
   const storedId = String(storedUser?.id ?? "").trim();
@@ -202,6 +220,8 @@ function paintStoredNavigation() {
   return storedUser;
 }
 
+// Revalidates the cached session against the backend and clears it if stale.
+// This protects staff-only actions from relying only on browser storage.
 async function verifyStoredStaffUser() {
   const storedUser = getStoredStaffUser();
   const storedId = String(storedUser?.id ?? "").trim();
@@ -213,7 +233,9 @@ async function verifyStoredStaffUser() {
   }
 
   try {
-    const adminRecord = await requestJson(resolveAppUrl(`api/admins/${storedId}`));
+    const adminRecord = await requestJson(
+      resolveAppUrl(`api/admins/${storedId}`),
+    );
     const verifiedId = String(adminRecord?.id ?? "").trim();
     const verifiedUsername = String(adminRecord?.username ?? "").trim();
 
@@ -242,6 +264,7 @@ async function verifyStoredStaffUser() {
   }
 }
 
+// Paints first, then replaces the nav state with the verified session result.
 async function syncStaffNavigation() {
   paintStoredNavigation();
 
@@ -256,12 +279,15 @@ async function syncStaffNavigation() {
   return null;
 }
 
+// Redirects to sign-in after a short delay so the user can read the status.
 function redirectToSignInSoon() {
   window.setTimeout(() => {
     window.location.href = resolveAppUrl("signin.html");
   }, 900);
 }
 
+// Requires a still-valid staff session before allowing a protected action.
+// When verification fails, it updates the UI and sends the user back to sign-in.
 async function requireStaffUser(statusElement, message) {
   const staffUser = await verifyStoredStaffUser();
 
@@ -282,6 +308,7 @@ async function requireStaffUser(statusElement, message) {
   return null;
 }
 
+// Builds a quick lookup map so claimed listings can find their source item data.
 function createItemsByIdMap(items) {
   return new Map(
     items
@@ -290,12 +317,13 @@ function createItemsByIdMap(items) {
   );
 }
 
+// Converts the claim flag into a short user-facing label.
 function formatClaimType(claimRecord) {
   return claimRecord?.isAppUser ? "Student" : "Guest";
 }
 
-// If an item already has a category saved, use it.
-// If not, take a best guess from the name/description.
+// Uses the saved category when present, otherwise infers one from keywords.
+// The regex checks keep browse filters usable even when older records are sparse.
 function inferBrowseCategory(item) {
   const savedCategory = String(item?.category ?? "").trim();
 
@@ -321,7 +349,9 @@ function inferBrowseCategory(item) {
     return "IDs & Cards";
   }
 
-  if (/(backpack|bag|bookbag|duffel|tote|purse|satchel|luggage)/.test(searchText)) {
+  if (
+    /(backpack|bag|bookbag|duffel|tote|purse|satchel|luggage)/.test(searchText)
+  ) {
     return "Bags";
   }
 
@@ -356,6 +386,7 @@ function inferBrowseCategory(item) {
   return "Other";
 }
 
+// Guesses the return desk from the found location when none was stored.
 function inferReturnDesk(location) {
   const text = normalizeText(location);
 
@@ -382,11 +413,13 @@ function inferReturnDesk(location) {
   return "Campus Front Desk";
 }
 
+// Returns the saved return desk or a fallback inferred from the location.
 function getBrowseReturnDesk(item) {
   const savedDesk = String(item?.returnTo ?? "").trim();
   return savedDesk || inferReturnDesk(item?.loc);
 }
 
+// Reads the current browse form values into normalized filter tokens.
 function getBrowseFilters() {
   if (!dom.browseFiltersForm) {
     return {
@@ -405,6 +438,7 @@ function getBrowseFilters() {
   };
 }
 
+// Renders the browse grid or an empty state message when no items match.
 function renderBrowseItems(
   items,
   emptyMessage = "No listings match those filters right now. Try clearing one or more filters.",
@@ -431,6 +465,8 @@ function renderBrowseItems(
       const category = escapeHtml(inferBrowseCategory(item));
       const dateLabel = escapeHtml(formatListingDate(item.date));
 
+      // start claim only if sign in by admin
+      // below are the create item format
       const claimButton =
         state.activeStaffUser?.id && item.id
           ? `
@@ -479,6 +515,8 @@ function renderBrowseItems(
     .join("");
 }
 
+// Renders claim records by merging each claim with its original item details.
+// This keeps the claimed page readable even when some item fields are missing.
 function renderClaimedItems(
   claims,
   itemsById,
@@ -504,7 +542,9 @@ function renderClaimedItems(
       const description = escapeHtml(
         item?.desc || "The original listing details are no longer available.",
       );
-      const category = escapeHtml(item ? inferBrowseCategory(item) : "Claim record");
+      const category = escapeHtml(
+        item ? inferBrowseCategory(item) : "Claim record",
+      );
       const foundNear = escapeHtml(item?.loc || "No location on file");
       const returnDesk = escapeHtml(
         item ? getBrowseReturnDesk(item) : "No return desk on file",
@@ -585,6 +625,7 @@ function renderClaimedItems(
     .join("");
 }
 
+// Applies the current browse filters and keeps the newest listings first.
 function applyBrowseFilters() {
   const filters = getBrowseFilters();
 
@@ -621,6 +662,7 @@ function applyBrowseFilters() {
   renderBrowseItems(filteredItems, emptyMessage);
 }
 
+// Loads unclaimed listings updates shared state, and refreshes the browse grid.
 async function loadBrowseListings() {
   if (!dom.itemGrid) {
     return;
@@ -644,6 +686,8 @@ async function loadBrowseListings() {
   }
 }
 
+// Loads both items and claim records then joins them for the claimed page.
+// Pulling both endpoints at once keeps the page fast and avoids partial renders.
 async function loadClaimedListings() {
   if (!dom.claimedGrid) {
     return;
@@ -674,10 +718,15 @@ async function loadClaimedListings() {
       error.message || "Unable to load claimed items right now.",
       "is-error",
     );
-    renderClaimedItems([], new Map(), "Claimed items are temporarily unavailable.");
+    renderClaimedItems(
+      [],
+      new Map(),
+      "Claimed items are temporarily unavailable.",
+    );
   }
 }
 
+// Toggles the student and guest claim fields to match the selected claimant type.
 function updateClaimFormState() {
   if (!dom.claimantTypeSelect) {
     return;
@@ -707,6 +756,7 @@ function updateClaimFormState() {
   }
 }
 
+// Closes the claim modal and resets its transient form state.
 function closeClaimModal() {
   if (!dom.claimModal) {
     return;
@@ -723,7 +773,7 @@ function closeClaimModal() {
   updateClaimFormState();
 }
 
-// Same modal every time. We just swap the item copy and hidden id.
+// Opens the shared claim modal and injects the selected item's context.
 function openClaimModal(item) {
   if (!dom.claimModal || !dom.claimForm || !item?.id) {
     return;
@@ -751,6 +801,7 @@ function openClaimModal(item) {
   dom.claimModal.hidden = false;
 }
 
+// Submits the staff signin form and stores the returned session.
 async function handleStaffSignIn(event) {
   event.preventDefault();
 
@@ -762,7 +813,11 @@ async function handleStaffSignIn(event) {
   const username = String(formData.get("username") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  updateStatusBanner(dom.signInStatus, "Checking your credentials...", "is-success");
+  updateStatusBanner(
+    dom.signInStatus,
+    "Checking your credentials...",
+    "is-success",
+  );
 
   try {
     const payload = await requestJson(resolveAppUrl("api/auth/signin"), {
@@ -784,6 +839,7 @@ async function handleStaffSignIn(event) {
   }
 }
 
+// Signs the current staff user out and returns the UI to its public state.
 function handleSignOut(event) {
   event.preventDefault();
   clearStoredStaffUser();
@@ -792,6 +848,7 @@ function handleSignOut(event) {
   window.location.href = resolveAppUrl("index.html");
 }
 
+// Creates a new item listing after confirming the staff session is still valid.
 async function handleAdminCreate(event) {
   event.preventDefault();
 
@@ -832,7 +889,11 @@ async function handleAdminCreate(event) {
     });
 
     dom.adminCreateForm.reset();
-    updateStatusBanner(dom.adminStatus, "Listing created successfully.", "is-success");
+    updateStatusBanner(
+      dom.adminStatus,
+      "Listing created successfully.",
+      "is-success",
+    );
   } catch (error) {
     updateStatusBanner(
       dom.adminStatus,
@@ -842,6 +903,7 @@ async function handleAdminCreate(event) {
   }
 }
 
+// Starts a claim when the user clicks the matching browse card action button.
 function handleItemGridClick(event) {
   if (!(event.target instanceof Element)) {
     return;
@@ -859,10 +921,14 @@ function handleItemGridClick(event) {
     return;
   }
 
-  const selectedItem = state.browseItems.find((item) => String(item.id) === itemId);
+  const selectedItem = state.browseItems.find(
+    (item) => String(item.id) === itemId,
+  );
   openClaimModal(selectedItem);
 }
 
+// Submits a claim record for the selected item and refreshes browse results.
+// A successful claim removes the item from the browse list and moves it to claimed.
 async function handleClaimSubmit(event) {
   event.preventDefault();
 
@@ -886,7 +952,11 @@ async function handleClaimSubmit(event) {
   const isStudent = claimantType !== "guest";
 
   if (!itemId) {
-    updateStatusBanner(dom.claimStatus, "Choose a listing before starting a claim.", "is-error");
+    updateStatusBanner(
+      dom.claimStatus,
+      "Choose a listing before starting a claim.",
+      "is-error",
+    );
     return;
   }
 
@@ -925,6 +995,7 @@ async function handleClaimSubmit(event) {
   }
 }
 
+// Attaches all page level event handlers once after the script loads.
 function bindEvents() {
   dom.navToggleButton?.addEventListener("click", () => {
     document.body.classList.toggle("nav-open");
@@ -948,7 +1019,7 @@ function bindEvents() {
   });
 
   dom.browseFiltersForm?.addEventListener("reset", () => {
-    // Let the browser reset the form first, then re-render.
+    // Let the browser reset the form first then rerender.
     window.setTimeout(() => {
       hideStatusBanner(dom.browseStatus);
       applyBrowseFilters();
@@ -956,6 +1027,7 @@ function bindEvents() {
   });
 }
 
+// Boots the page by syncing auth state enforcing protected pages and loading data.
 async function initializePage() {
   state.activeStaffUser = await syncStaffNavigation();
   updateClaimFormState();

@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    /** Provides the password encoder used for hashing and verifying admin passwords. */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -20,6 +21,7 @@ public class SecurityConfig {
     
     @Bean
 
+    /** Disables interactive auth flows and leaves all routes open to the application itself. */
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
     .csrf(csrf -> csrf.disable())

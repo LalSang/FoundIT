@@ -24,26 +24,16 @@ public class foundItemService
 
 
 
-
-    /**foundItemService
-     *  Class Constructor
-     * 
-     * @param mongoTemplate - The template for the mongo database
-     * @param iService - ItemService object so this class is able to run itemService functions
-     */
+    /** Wires the found-item service to item lookups and Mongo persistence. */
     public foundItemService(MongoTemplate mongoTemplate, itemService iService)
     {
         this.mongoTemplate = mongoTemplate;
         this.iService = iService;
     }
 
-
-
-    /**createFoundItem
-     *  Creates an item and adds it to the database
-     * 
-     * @param i - The Founditem to be added
-     * @return - The item if successfully added nothing if not
+    /**
+     * Creates a claim record after verifying the item exists, the item is not
+     * already claimed, and the submitted contact fields match the claimant type.
      */
     public foundItem createFoundItem(foundItem i)
     {
@@ -75,21 +65,13 @@ public class foundItemService
         return mongoTemplate.save(i);
     }
 
-    /**getAllFoundItems
-     *  Return a list of all items in the database
-     * 
-     * @return - A list of Finditems
-     */
+    /** Returns every claim record currently stored in MongoDB. */
     public List<foundItem> getAllFoundItems()
     {
         return mongoTemplate.findAll(foundItem.class);
     }
 
-    /**getFoundItemById
-     * 
-     * @param id - foundItem identifier 
-     * @return - specific foundItem
-     */
+    /** Looks up a single claim record by id. */
     public Optional<foundItem> getFoundItemById(String id)
     {
         var foundItem = mongoTemplate.findById(id, foundItem.class);
@@ -97,12 +79,7 @@ public class foundItemService
         return Optional.ofNullable(foundItem);
     }
 
-    /**
-     * 
-     * @param id - foundItem identifier 
-     * @param i - foundItem object
-     * @return - specific foundItem with updates
-     */ 
+    /** Updates a saved claim record after rerunning item and contact validation. */
     public foundItem updateFoundItem(String id, foundItem i)
     {
         if((iService.getItemById(i.getItemId())).isEmpty())
@@ -136,11 +113,7 @@ public class foundItemService
         return getFoundItemById(id).orElse(null);
     }
 
-    /**deleteFoundItem
-     * 
-     * @param id - foundItem identification 
-     * @return - True if foundItem is found and deleted
-     */
+    /** Removes a claim record and deletes the linked listing when the claim exists. */
     public boolean deleteFoundItem(String id)
     {
         var found = mongoTemplate.findById(id, foundItem.class);
@@ -153,11 +126,7 @@ public class foundItemService
         return mongoTemplate.remove(query, foundItem.class).getDeletedCount() > 0;
     }
 
-    /**
-     * itemFouns
-     * @param ii - foundItem object
-     * @return - true if item is found
-     */
+    /** Checks whether the item referenced by the claim is already attached to another claim. */
     public boolean itemFound(foundItem ii)
     {
         List<foundItem> li = getAllFoundItems();
@@ -177,6 +146,10 @@ public class foundItemService
      * chekcs every 60 sec if a foundItem hit the cutoffTime
      */
     @Scheduled(fixedRate = 60000) // runs every 60 seconds
+    /**
+     * Periodically removes stale claim records and also deletes their matching
+     * listings so expired claims do not keep items off the browse page forever.
+     */
     public void cleanupExpiredFoundItems()
     {
 
@@ -197,12 +170,7 @@ public class foundItemService
         }
     }
 
-    /**
-     * validateContatInfo
-     * @param i - foundItemObject
-     * 
-     * checks for empty required info
-     */
+    /** Enforces the contact fields required for either student or guest claims. */
     private void validateContactInfo(foundItem i)
     {
         if(i.getPhoneNum() == null || i.getPhoneNum().isBlank() || i.getEmail() == null || i.getEmail().isBlank())

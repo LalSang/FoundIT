@@ -26,21 +26,13 @@ public class authController {
 
     private final adminService aService;
 
-    /**
-     * 
-     * @param aService - Allows the use of adminService functinos in this class
-     */
+    /** Stores the admin service used to authenticate staff sign-ins. */
     public authController(adminService aService)
     {
         this.aService = aService;
     }
 
-    // Create - Post /auth/signin
-    /**
-     * 
-     * @param request - The sign in request that is both valid and a RequestBody
-     * @return - 401 if username or password is incorrect
-     */
+    /** Authenticates a sign-in request and returns the staff profile payload on success. */
     @PostMapping("/signin")
     public ResponseEntity<Map<String, Object>> signIn(@Valid @RequestBody SignInRequest request)
     {
@@ -63,11 +55,7 @@ public class authController {
         return ResponseEntity.ok(responseBody);
     }
 
-    /**handleServiceUnavailabe
-     *  Catches Exceptions and informs the user the Exception is happening
-     * 
-     * @return - 503 Error and the message that the Database connection failed
-     */
+    /** Converts backend connectivity failures into a consistent API response. */
     @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<Map<String, Object>> handleServiceUnavailable()
     {
@@ -75,19 +63,14 @@ public class authController {
                 .body(Map.of("message", "Sign in is temporarily unavailable. Database connection failed."));
     }
 
-    // holds the Username and Password from the SignInRequest
+    /** Captures the username and password required for sign-in. */
     public record SignInRequest(
             @NotBlank(message = "Username is required") String username,
             @NotBlank(message = "Password is required") String password)
     {
     }
 
-    /**authenticateAdmin
-     *  Trys to check if the username and password are correct and catches the exception if it fails
-     * 
-     * @param request - The username and password of the sign in request
-     * @return - If the sign in was susccesful or not - Throws Error if authentication fails
-     */
+    /** Wraps service-layer authentication so database failures can be logged and normalized. */
     private java.util.Optional<admin> authenticateAdmin(SignInRequest request)
     {
         try
@@ -101,7 +84,7 @@ public class authController {
         }
     }
 
-    // Makes null into empty
+    /** Replaces null response values with empty strings for the frontend. */
     private String emptyIfNull(String value)
     {
         return value == null ? "" : value;

@@ -45,10 +45,12 @@ public class foundItem {
 
 
 
+    /** Creates an empty claim record for framework binding. */
     public foundItem()
     {
     }
 
+    /** Builds a new claim record and timestamps it immediately. */
     public foundItem(String itemId, String firstName, String lastName, boolean isAppUser, String appId, String phoneNum, String email)
     {
         this.itemId = itemId;
@@ -61,82 +63,109 @@ public class foundItem {
         this.date = Instant.now();
     }
 
+    /** Returns the Mongo id for this claim record. */
     public String getId()
     {
         return this.id;
     }
+
+    /** Sets the Mongo id for this claim record. */
     public void setId(String id)
     {
         this.id = id;
     }
 
+    /** Returns the id of the item being claimed. */
     public String getItemId()
     {
         return this.itemId;
     }
+
+    /** Sets the id of the item being claimed. */
     public void setItemId(String itemId)
     {
         this.itemId = itemId;
     }
 
+    /** Returns the claimant's first name. */
     public String getFirstName()
     {
         return this.firstName;
     }
+
+    /** Sets the claimant's first name. */
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
     }
 
+    /** Returns the claimant's last name. */
     public String getLastName()
     {
         return this.lastName;
     }
+
+    /** Sets the claimant's last name. */
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
     }
 
+    /** Returns whether the claimant is a student/app user. */
     public boolean getIsAppUser()
     {
         return this.isAppUser;
     }
+
+    /** Sets whether the claimant is a student/app user. */
     public void setIsAppUser(boolean isAppUser)
     {
         this.isAppUser = isAppUser;
     }
 
+    /** Returns the student or app id tied to the claim. */
     public String getAppId()
     {
         return this.appId;
     }
+
+    /** Sets the student or app id tied to the claim. */
     public void setAppId(String appId)
     {
         this.appId = appId;
     }
 
+    /** Returns the phone number captured for the claimant. */
     public String getPhoneNum()
     {
         return this.phoneNum;
     }
+
+    /** Sets the phone number captured for the claimant. */
     public void setPhoneNum(String phoneNum)
     {
         this.phoneNum = phoneNum;
     }
 
+    /** Returns the email captured for the claimant. */
     public String getEmail()
     {
         return this.email;
     }
+
+    /** Sets the email captured for the claimant. */
     public void setEmail(String email)
     {
         this.email = email;
     }
 
+    /** Returns when the claim record was created or last updated. */
     public Instant getDate()
     {
         return this.date;
     }
+
+    /** Sets when the claim record was created or last updated. */
     public void setDate(Instant date)
     {
         this.date = date;

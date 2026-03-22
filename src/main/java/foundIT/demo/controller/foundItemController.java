@@ -25,32 +25,22 @@ public class foundItemController {
 
     private final foundItemService fIService;
 
-    /**
-     * @param fiS - fonundItemService for functions
-     */
+
+    /** Stores the claim service used by this controller. */
     public foundItemController(foundItemService fiS)
     {
         this.fIService = fiS;
     }
 
+    /** Creates a new claim record for an item. */
     @PostMapping
-    // Create - Post /api/foundItems
-    /**
-     * creates foundItem
-     * @param fI - foundItem object
-     * @return - 201 if foundItem successfully created
-     */
     public ResponseEntity<foundItem> createFoundItem(@Valid @RequestBody foundItem fI)
     {
         var savedFI = fIService.createFoundItem(fI);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFI);
     }
 
-    // Read - Get /api/foundItems
-    /**
-     * returns foundItems
-     * @return - 200 if successful
-     */
+    /** Returns every claim record in the system. */
     @GetMapping
     public ResponseEntity<List<foundItem>> getAllFoundItems()
     {
@@ -59,12 +49,7 @@ public class foundItemController {
         return ResponseEntity.status(HttpStatus.OK).body(fI);
     }
 
-    // Read - Get /api/foundItems/{id}
-    /**
-     * finds foundItems
-     * @param id - foundItem Identification
-     * @return - 200 if successful
-     */
+    /** Returns one claim record by id. */
     @GetMapping("/{id}")
     public ResponseEntity<foundItem> updateFoundItem(@PathVariable String id)
     {
@@ -72,13 +57,7 @@ public class foundItemController {
         return ResponseEntity.status(HttpStatus.OK).body(a);
     }
     
-    // Update - put /api/foundItems/{id}
-    /**
-     * updates foundItem
-     * @param id - fonundItem Id
-     * @param a - foundItem object
-     * @return - 200 if good
-     */
+    /** Updates an existing claim record when the requested id exists. */
     @PutMapping("/{id}")
     public ResponseEntity<foundItem> updatedFI(@PathVariable String id,
                                                 @RequestBody foundItem a)
@@ -92,12 +71,7 @@ public class foundItemController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedFoundItem);
     }
 
-    // Delete - Delete /api/foundItems/{id}
-    /**
-     * deletes a foundItem
-     * @param id - foundItem id
-     * @return - 200 if successful
-     */
+    /** Deletes a claim record and its linked item listing. */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delteFoundItem(@PathVariable String id)
     {

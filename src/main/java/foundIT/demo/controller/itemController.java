@@ -27,20 +27,28 @@ public class itemController {
     private final itemService iService;
 
 
+<<<<<<< HEAD
     /**
      * @param iService - itemService for functions
      */
+=======
+    /** Stores the item service used by this REST controller. */
+>>>>>>> 191c937 (comments for main.js)
     public itemController(itemService iService)
     {
         this.iService = iService;
     }
 
+<<<<<<< HEAD
     // Create - Post /api/items
     /**
      * creates a itemObject
      * @param i - item object 
      * @return - 201 if successful
      */
+=======
+    /** Creates a new item listing from the request body. */
+>>>>>>> 191c937 (comments for main.js)
     @PostMapping
     public ResponseEntity<item> createItem(@Valid @RequestBody item i)
     {
@@ -48,11 +56,15 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
     }
 
+<<<<<<< HEAD
     // Read - Get /api/items
     /**
      * returns all items
      * @return - 200 if successful
      */
+=======
+    /** Returns every saved item listing. */
+>>>>>>> 191c937 (comments for main.js)
     @GetMapping
     public ResponseEntity<List<item>> getAllItems()
     {
@@ -61,11 +73,7 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemList);
     }
 
-    // Read - Get /api/items/unclaimed
-    /**
-     * returns unclaimedItems
-     * @return - 200 if successful
-     */
+    /** Returns only the items that do not already have a claim record. */
     @GetMapping("/unclaimed")
     public ResponseEntity<List<item>> getUnclaimedItems()
     {
@@ -74,12 +82,7 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemList);
     }
 
-    // Read - Get /api/items/getType
-    /**
-     * finds item by type
-     * @param type - item type for categorical search
-     * @return  - 200 if successful
-     */
+    /** Returns items whose type matches the incoming query value. */
     @GetMapping("/getType")
     public ResponseEntity<List<item>> getType(String type)
     {
@@ -97,11 +100,7 @@ public class itemController {
     //     return ResponseEntity.status(HttpStatus.OK).body(itemList);
     // }
 
-    // Read - Get /api/items/getClaimed
-    /**
-     * returns list of claimed items
-     * @return - 200 if successful 
-     */
+    /** Returns items that currently appear on the claimed page. */
     @GetMapping("/getClaimed")
     public ResponseEntity<List<item>> getClaimed()
     {
@@ -111,12 +110,7 @@ public class itemController {
     }
 
 
-    // Read - Get /api/items/{id}
-    /**
-     * returns item by specific id
-     * @param id - item identification number
-     * @return - 200 if successful
-     */
+    /** Returns one item by id. */
     @GetMapping("/{id}")
     public ResponseEntity<item> updateItem(@PathVariable String id)
     {
@@ -124,13 +118,7 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(i);
     }
     
-    // Update - put /api/items/{id}
-    /**
-     * upates item 
-     * @param id - item identification
-     * @param i - item object
-     * @return - 200 if successful
-     */
+    /** Updates an existing item when the target id is present. */
     @PutMapping("/{id}")
     public ResponseEntity<item> updatedItem(@PathVariable String id,
                                                 @RequestBody item i)
@@ -144,12 +132,7 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
     }
 
-    // Delete - Delete /api/items/{id}
-    /**
-     * deletes specific item
-     * @param id - item id
-     * @return - 200 if successful
-     */
+    /** Deletes an item and returns a simple success or failure message. */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItem(@PathVariable String id)
     {

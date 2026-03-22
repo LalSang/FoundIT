@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class DemoApplication {
 
+	/** Boots the Spring application and starts the web server. */
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}

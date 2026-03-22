@@ -22,19 +22,14 @@ public class adminService
     private final PasswordEncoder passwordEncoder;
 
 
-    /** createAdmin
-     *  Creates an admin and saves it to the Database
-     * 
-     * @param admin - The admin to be created
-     * @return The newly saved Admin
-     */
-
+    /** Wires Mongo persistence and password hashing for admin records. */
     public adminService(MongoTemplate mongoTemplate,  PasswordEncoder passwordEncoder)
     {
         this.mongoTemplate = mongoTemplate;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /** Saves a new admin after rejecting duplicate usernames and hashing the password. */
     public admin createAdmin(admin ad)
     {
         if(usernameExists(ad))
@@ -48,24 +43,13 @@ public class adminService
         return mongoTemplate.save(ad);
     }
 
-    /** getAdminById
-     *  Gets the admin specified by the inputted id
-     * 
-     * @param id - The id of the admin to grab
-     * @return - Returns an Optional object that either holds the admin if it exists
-     *                  and empty if the admin does not exist
-     */
+    /** Returns every admin record from the database. */
     public List<admin> getAllAdmins()
     {
         return mongoTemplate.findAll(admin.class);
     }
 
-    /**getAdminById
-     *  Gets the admin that corresponds to the specified id
-     * 
-     * @param id - The id of the admin to find
-     * @return - Returns the admin if the id corresponds to it returns an empty optional variable if not
-     */
+    /** Looks up an admin by Mongo id. */
     public Optional<admin> getAdminById(String id)
     {
         var admin = mongoTemplate.findById(id, admin.class);
@@ -73,12 +57,7 @@ public class adminService
         return Optional.ofNullable(admin);
     }
 
-    /**getAdminByUsername
-     *  Gets the admin that corresponds to the specified username
-     * 
-     * @param username - The username of the admin to find
-     * @return - Returns the admin if the username corresponds to it returns an empty optional variable if not
-     */
+    /** Finds a single admin by username. */
     public Optional<admin> getAdminByUsername(String username)
     {
         var query = new Query(Criteria.where("username").is(username));
@@ -87,20 +66,14 @@ public class adminService
         return Optional.ofNullable(admin);
     }
 
-
+    /** Authenticates a sign-in attempt by username and password. */
     public Optional<admin> authenticate(String username, String password)
     {
         return getAdminByUsername(username)
                 .filter(existingAdmin -> passwordMatches(password, existingAdmin.getPassword()));
     }
 
-    /**updateAdmin
-     *  Updates an admin in the database that corresponds to the given id
-     * 
-     * @param id - The id of the admin to change
-     * @param admin - The updated info
-     * @return - The updated admin
-     */
+    /** Updates the admin profile fields for the requested record. */
     public admin updateAdmin(String id, admin admin)
     {
         if(usernameExists(admin))
@@ -120,12 +93,8 @@ public class adminService
         return getAdminById(id).orElse(null);
     }
 
-    /**deleteAdmin
-     *  Deletes an admin from the database
-     * 
-     * @param id - The id of the admin to delete
-     * @return - Returns true if the the admin was successfully removed false if not
-     */
+
+    /** Deletes an admin record by id and reports whether anything was removed. */
     public boolean deleteAdmin(String id)
     {
         var query = new Query(Criteria.where("id").is(id));
@@ -133,12 +102,8 @@ public class adminService
         return mongoTemplate.remove(query, admin.class).getDeletedCount() > 0;
     }
 
-    /**usernameExists
-     *  Checks if the given username is in the admin table
-     * 
-     * @param ia - The admin info to check
-     * @return - True if the username exists false if not
-     */
+
+    /** Checks whether the requested username is already present in the admin collection. */
     public boolean usernameExists(admin ia)
     {
         List<admin> la = getAllAdmins();
@@ -151,12 +116,8 @@ public class adminService
         }
         return false;
     }
-    /**findPassword
-     *  Checks through each admin for a corresponding username then returns the stored password
-     * 
-     * @param user - The username of the admin to find the password of
-     * @return - The pasword if found null if not found
-     */
+
+    /** Returns the stored password string for the given username, if one exists. */
     public String findPassword(String user)
     {
 
@@ -173,11 +134,10 @@ public class adminService
 
     }
 
-    /**passwordMatches
-     *  Checks if the inputted username and password correspond to a given admin
-     * 
-     * @param a - An admin object that stores the username and password
-     * @return - True if the login is successful false if not
+    /**
+     * Validates an admin sign-in object by finding the stored password for the
+     * username and then comparing plain text against either a bcrypt hash or a
+     * previously stored raw value.
      */
     public boolean passwordMatches(admin a)
     {
@@ -192,6 +152,7 @@ public class adminService
         return passwordEncoder.matches(rawPassword, storedPassword) || rawPassword.equals(storedPassword);
     }
 
+    /** Compares a submitted password to the stored value while tolerating legacy raw passwords. */
     private boolean passwordMatches(String rawPassword, String storedPassword)
     {
         
