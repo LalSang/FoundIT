@@ -39,7 +39,7 @@ public class adminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
 
-    // Create - Post /api/admins
+    // Create - Post /api/admins/signin
     @PostMapping("/signin")
     public ResponseEntity<String> signInAdmin(@Valid @RequestBody admin a)
     {
@@ -59,6 +59,7 @@ public class adminController {
 
         return ResponseEntity.status(HttpStatus.OK).body(adminList);
     }
+
 
     // Read - Get /api/admins/{id}
     @GetMapping("/{id}")

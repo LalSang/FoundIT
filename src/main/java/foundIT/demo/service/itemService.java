@@ -9,16 +9,17 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import foundIT.demo.model.foundItem;
 import foundIT.demo.model.item;
 
 @Service
 public class itemService
 {
     private final adminService aService;
+
     private final MongoTemplate mongoTemplate;
 
 
@@ -27,6 +28,7 @@ public class itemService
     {
         this.mongoTemplate = mongoTemplate;
         this.aService = aService;
+        
     }
 
     public item createItem(item i)
@@ -40,8 +42,33 @@ public class itemService
 
     public List<item> getAllItems()
     {
+        
         return mongoTemplate.findAll(item.class);
     }
+
+    public List<item> getType(String type)
+    {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("itemType").is(type));
+        return  mongoTemplate.find(query, item.class);
+    }
+
+    public List<item> getNotFound()
+    {
+        List<foundItem> foundItems = mongoTemplate.findAll(foundItem.class);
+
+        List<String> ids = foundItems.stream()
+            .map(foundItem::getItemId)
+            .toList();
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").nin(ids));
+        return  mongoTemplate.find(query, item.class);
+    }
+
+    
+
+
 
     public Optional<item> getItemById(String id)
     {

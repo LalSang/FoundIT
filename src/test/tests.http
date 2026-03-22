@@ -6,6 +6,16 @@ get http://localhost:8080/api/admins
 get http://localhost:8080/api/foundItems
 ###
 
+post http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+    "firstName":"John",
+    "lastName":"Pork",
+    "username":"jPork236",
+    "password":"1893"
+}
+###
 post http://localhost:8080/api/admins/signin
 Content-Type: application/json
 

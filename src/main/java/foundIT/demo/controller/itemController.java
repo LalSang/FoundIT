@@ -49,6 +49,25 @@ public class itemController {
         return ResponseEntity.status(HttpStatus.OK).body(itemList);
     }
 
+    // Read - Get /api/items/getType
+    @GetMapping("/getType")
+    public ResponseEntity<List<item>> getType(String type)
+    {
+        List<item> itemList = iService.getType(type);
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemList);
+    }
+
+    // Read - Get /api/items/getNotFound
+    @GetMapping("/getType")
+    public ResponseEntity<List<item>> getNotFound()
+    {
+        List<item> itemList = iService.getNotFound();
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemList);
+    }
+
+
     // Read - Get /api/items/{id}
     @GetMapping("/{id}")
     public ResponseEntity<item> updateItem(@PathVariable String id)
