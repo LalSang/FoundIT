@@ -68,13 +68,13 @@ public class itemController {
     }
 
     // Read - Get /api/items/getNotClaimed
-    @GetMapping("/getNotClaimed")
-    public ResponseEntity<List<item>> getNotFound()
-    {
-        List<item> itemList = iService.getNotFound();
+    // @GetMapping("/getNotClaimed")
+    // public ResponseEntity<List<item>> getNotFound()
+    // {
+    //     List<item> itemList = iService.getNotFound();
 
-        return ResponseEntity.status(HttpStatus.OK).body(itemList);
-    }
+    //     return ResponseEntity.status(HttpStatus.OK).body(itemList);
+    // }
 
     // Read - Get /api/items/getClaimed
     @GetMapping("/getClaimed")
