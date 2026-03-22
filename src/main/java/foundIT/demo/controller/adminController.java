@@ -51,7 +51,7 @@ public class adminController {
         {
             return ResponseEntity.ok(Collections.singletonMap("message", "Sign in successful"));
         }
-        return ResponseEntity.ok(Collections.singletonMap("message", "Sign in Unsuccessful"));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("message", "Sign in Unsuccessful"));
         //return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
     }
 
