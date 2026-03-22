@@ -4,7 +4,9 @@ navToggleButton?.addEventListener("click", () => {
   document.body.classList.toggle("nav-open");
 });
 
-const staffSignInForm = document.getElementById("staff-signin-form");
+const staffSignInForm =
+  document.getElementById("staff-signin-form") ??
+  document.querySelector(".staff-signin-form");
 const signInStatus = document.getElementById("signin-status");
 
 function updateSignInStatus(message, variant) {
@@ -42,8 +44,7 @@ staffSignInForm?.addEventListener("submit", async (event) => {
     }
 
     sessionStorage.setItem("foundItStaffUser", JSON.stringify(payload));
-    updateSignInStatus(`Signed in as ${payload.username}.`, "is-success");
-    staffSignInForm.reset();
+    window.location.href = "admin.html";
   } catch (error) {
     updateSignInStatus(
       error.message || "Unable to sign in right now.",

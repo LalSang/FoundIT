@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Simple staff page for desk workers and admins."
+    />
+    <title>foundIT Staff Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
+
+  <body>
+    <nav class="top-nav">
+      <div class="nav-container">
+        <button
+          type="button"
+          id="nav-toggle-btn"
+          class="nav-toggle"
+          aria-label="Toggle navigation"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        <div class="nav-left">
+          <a href="index.html" class="nav-brand">
+            <img
+              src="../assets/logo.svg"
+              alt="foundIT Logo"
+              class="nav-logo"
+              width="200"
+              height="51"
+            />
+          </a>
+        </div>
+
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="browse.html" class="nav-link">Browse Items</a>
+          </div>
+          <a href="signin.html" class="btn btn-primary">Sign Out</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="admin-page">
+      <section class="admin-simple-shell">
+        <header class="admin-simple-header">
+          <p class="section-eyebrow">Staff View</p>
+          <h1 class="admin-simple-title">Worker and Admin Page</h1>
+          <p class="admin-simple-copy">
+            Desk workers can post found items and remove listings when items are
+            returned. Admins can also manage staff and review claim issues.
+          </p>
+        </header>
+
+        <section class="admin-simple-card">
+          <h2 class="admin-simple-section-title">Post Found Item</h2>
+          <form class="admin-simple-form">
+            <label class="filter-group">
+              <span class="filter-label">Item Name</span>
+              <input
+                class="filter-input"
+                type="text"
+                name="itemName"
+                placeholder="Black backpack"
+              />
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Description</span>
+              <textarea
+                class="filter-input filter-textarea"
+                name="description"
+                placeholder="Short description of the item"
+              ></textarea>
+            </label>
+
+            <label class="filter-group">
+              <span class="filter-label">Found Location</span>
+              <input
+                class="filter-input"
+                type="text"
+                name="location"
+                placeholder="Belk Library"
+              />
+            </label>
+
+            <button type="button" class="btn btn-primary">
+              Create Listing
+            </button>
+          </form>
+        </section>
+
+        <section class="admin-simple-card">
+          <h2 class="admin-simple-section-title">Current Listings</h2>
+
+          <article class="admin-simple-listing">
+            <div>
+              <h3>Gray AirPods Case</h3>
+              <p>Held at the Rec Center Front Desk.</p>
+            </div>
+            <div class="admin-simple-actions">
+              <button type="button" class="btn btn-secondary">Edit</button>
+              <button type="button" class="btn btn-primary">
+                Mark Returned
+              </button>
+              <button type="button" class="btn btn-secondary">Delete</button>
+            </div>
+          </article>
+
+          <article class="admin-simple-listing">
+            <div>
+              <h3>Student ID Holder</h3>
+              <p>Held at Peacock Hall Office.</p>
+            </div>
+            <div class="admin-simple-actions">
+              <button type="button" class="btn btn-secondary">Edit</button>
+              <button type="button" class="btn btn-primary">
+                Mark Returned
+              </button>
+              <button type="button" class="btn btn-secondary">Delete</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="admin-simple-card">
+          <h2 class="admin-simple-section-title">Admin Only</h2>
+          <ul class="admin-simple-list">
+            <li>Manage worker accounts</li>
+            <li>Review claim disputes</li>
+            <li>Update item categories and return locations</li>
+          </ul>
+        </section>
+      </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+  </body>
+</html>

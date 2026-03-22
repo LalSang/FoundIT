@@ -77,7 +77,7 @@
             Desk worker and administrator access only.
           </p> -->
 
-          <form class="staff-signin-form">
+          <form id="staff-signin-form" class="staff-signin-form">
             <label class="auth-field">
               <span class="filter-label">Username</span>
               <input
@@ -100,10 +100,11 @@
               />
             </label>
 
-            <button type="button" class="btn btn-primary auth-submit">
+            <button type="submit" class="btn btn-primary auth-submit">
               Sign In
             </button>
           </form>
+          <div id="signin-status" class="status-banner" hidden></div>
         </section>
       </section>
     </main>
