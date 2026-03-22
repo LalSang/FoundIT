@@ -3,12 +3,15 @@ package foundIT.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -109,7 +112,13 @@ public class foundItemService
 
     public boolean deleteFoundItem(String id)
     {
-        var query =new Query(Criteria.where("id").is(id));
+        var found = mongoTemplate.findById(id, foundItem.class);
+
+        if (found == null) return false;
+
+        iService.deleteItem(found.getItemId());
+
+        var query = new Query(Criteria.where("id").is(id));
         return mongoTemplate.remove(query, foundItem.class).getDeletedCount() > 0;
     }
 
@@ -126,4 +135,19 @@ public class foundItemService
         return false;
     }
 
+    @Scheduled(fixedRate = 60000) // runs every 60 seconds
+    public void cleanupExpiredFoundItems()
+    {
+        Instant todaysDate = Instant.now();
+
+        Query query = new Query(Criteria.where("date").lt(todaysDate));
+
+        List<foundItem> expiredItems = mongoTemplate.find(query, foundItem.class);
+
+        for (foundItem foundItem : expiredItems) 
+        {
+            iService.deleteItem(foundItem.getItemId());
+            mongoTemplate.remove(foundItem);
+        }
+    }
 }

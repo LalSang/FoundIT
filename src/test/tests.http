@@ -28,7 +28,7 @@ post http://localhost:8080/api/foundItems
 Content-Type: application/json
 
 {
-    "itemId":"69bf1499e2e3d4540d1813cf",
+    "itemId":"69bf3d5a0bb523bbeaaf053b",
     "firstName":"App",
     "lastName":"Student",
     "isAppUser":true,
