@@ -30,6 +30,7 @@ public class foundItemService
         this.iService = iService;
     }
 
+
     public foundItem createFoundItem(foundItem i)
     {
         if((iService.getItemById(i.getItemId())).isEmpty())
@@ -134,9 +135,14 @@ public class foundItemService
     @Scheduled(fixedRate = 60000) // runs every 60 seconds
     public void cleanupExpiredFoundItems()
     {
-        Instant todaysDate = Instant.now();
 
-        Query query = new Query(Criteria.where("date").lt(todaysDate));
+        //for testing
+        Instant cutOff = Instant.now().minusSeconds(120);
+
+        //for 5 days
+        //Instant cutOff = Instant.now();
+
+        Query query = new Query(Criteria.where("date").lt(cutOff));
 
         List<foundItem> expiredItems = mongoTemplate.find(query, foundItem.class);
 
