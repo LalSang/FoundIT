@@ -35,16 +35,21 @@ public class foundItemService
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not a valid admin");
         }
 
+        if(itemFound(i))
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item already found");
+        }
+
         if(i.getIsAppUser())
         {
-            if((i.getAppId()).isEmpty())
+            if((i.getAppId()) == null)
             {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need AppID for App User");
             }
         }
         else
         {
-            if((i.getPhoneNum()).isEmpty() || (i.getEmail()).isEmpty())
+            if((i.getPhoneNum()) == null || (i.getEmail()) == null)
             {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both email and phone num must be filled for Guests");
             }
@@ -106,6 +111,19 @@ public class foundItemService
     {
         var query =new Query(Criteria.where("id").is(id));
         return mongoTemplate.remove(query, foundItem.class).getDeletedCount() > 0;
+    }
+
+    public boolean itemFound(foundItem ii)
+    {
+        List<foundItem> li = getAllFoundItems();
+        for ( foundItem f : li)
+        {
+            if (f.getItemId().equals(ii.getItemId()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

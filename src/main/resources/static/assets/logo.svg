@@ -8,8 +8,8 @@
 
   <style>
     text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
+      font-family: 'Space Grotesk';
+      font-weight: 600;
       font-size: 72px;
     }
   </style>

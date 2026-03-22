@@ -9,10 +9,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import foundIT.demo.model.admin;
 
@@ -68,6 +67,20 @@ public class adminService
         return Optional.ofNullable(admin);
     }
 
+    public Optional<admin> getAdminByUsername(String username)
+    {
+        var query = new Query(Criteria.where("username").is(username));
+        var admin = mongoTemplate.findOne(query, admin.class);
+
+        return Optional.ofNullable(admin);
+    }
+
+    // public Optional<admin> authenticate(String username, String password)
+    // {
+    //     return getAdminByUsername(username)
+    //             .filter(existingAdmin -> passwordMatches(password, existingAdmin.getPassword()));
+    // }
+
     public admin updateAdmin(String id, admin admin)
     {
         if(usernameExists(admin))
@@ -107,6 +120,35 @@ public class adminService
             }
         }
         return false;
+    }
+    public String findPassword(String user)
+    {
+
+        List<admin> la = getAllAdmins();
+        String pass = "";
+        for ( admin a : la)
+        {
+            if (a.getUsername().equals(user))
+            {
+                pass = a.getPassword();
+            }
+        }
+
+        return pass;
+
+    }
+
+    public boolean passwordMatches(admin a)
+    {
+        String rawPassword = a.getPassword();
+        
+        if (rawPassword == null || !usernameExists(a))
+        {
+            return false;
+        }
+        String storedPassword = findPassword(a.getUsername());
+
+        return passwordEncoder.matches(rawPassword, storedPassword) || rawPassword.equals(storedPassword);
     }
 
 
