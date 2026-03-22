@@ -27,12 +27,20 @@ public class itemController {
     private final itemService iService;
 
 
+    /**
+     * @param iService - itemService for functions
+     */
     public itemController(itemService iService)
     {
         this.iService = iService;
     }
 
     // Create - Post /api/items
+    /**
+     * creates a itemObject
+     * @param i - item object 
+     * @return - 201 if successful
+     */
     @PostMapping
     public ResponseEntity<item> createItem(@Valid @RequestBody item i)
     {
@@ -41,6 +49,10 @@ public class itemController {
     }
 
     // Read - Get /api/items
+    /**
+     * returns all items
+     * @return - 200 if successful
+     */
     @GetMapping
     public ResponseEntity<List<item>> getAllItems()
     {
@@ -50,6 +62,10 @@ public class itemController {
     }
 
     // Read - Get /api/items/unclaimed
+    /**
+     * returns unclaimedItems
+     * @return - 200 if successful
+     */
     @GetMapping("/unclaimed")
     public ResponseEntity<List<item>> getUnclaimedItems()
     {
@@ -59,6 +75,11 @@ public class itemController {
     }
 
     // Read - Get /api/items/getType
+    /**
+     * finds item by type
+     * @param type - item type for categorical search
+     * @return  - 200 if successful
+     */
     @GetMapping("/getType")
     public ResponseEntity<List<item>> getType(String type)
     {
@@ -77,6 +98,10 @@ public class itemController {
     // }
 
     // Read - Get /api/items/getClaimed
+    /**
+     * returns list of claimed items
+     * @return - 200 if successful 
+     */
     @GetMapping("/getClaimed")
     public ResponseEntity<List<item>> getClaimed()
     {
@@ -87,6 +112,11 @@ public class itemController {
 
 
     // Read - Get /api/items/{id}
+    /**
+     * returns item by specific id
+     * @param id - item identification number
+     * @return - 200 if successful
+     */
     @GetMapping("/{id}")
     public ResponseEntity<item> updateItem(@PathVariable String id)
     {
@@ -95,6 +125,12 @@ public class itemController {
     }
     
     // Update - put /api/items/{id}
+    /**
+     * upates item 
+     * @param id - item identification
+     * @param i - item object
+     * @return - 200 if successful
+     */
     @PutMapping("/{id}")
     public ResponseEntity<item> updatedItem(@PathVariable String id,
                                                 @RequestBody item i)
@@ -109,6 +145,11 @@ public class itemController {
     }
 
     // Delete - Delete /api/items/{id}
+    /**
+     * deletes specific item
+     * @param id - item id
+     * @return - 200 if successful
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItem(@PathVariable String id)
     {
